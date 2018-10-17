@@ -12,4 +12,10 @@ public class ViewController {
 		return "index";
 	}
 	
+	@GetMapping("/game")
+	public String game() {
+		
+		return "game";
+	}
+	
 }

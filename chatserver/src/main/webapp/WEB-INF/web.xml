@@ -14,6 +14,7 @@
       <param-value>com.project.chat.config.WebMvcContextConfiguration</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported> 
   </servlet>
   <servlet-mapping>
     <servlet-name>mvc</servlet-name>

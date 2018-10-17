@@ -1,0 +1,53 @@
+body {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: black;
+    height: 100%;
+}
+
+.wrap {
+    height: 90%;
+}
+
+.main_area {
+    
+    background-color: aqua;
+    width: 500px;
+    height: 900px;
+    overflow: auto;
+}
+
+.chat {
+    background-color: blanchedalmond;
+    width: 300px;
+}
+
+.chat .thumbnail_area {
+    width: 60px;
+    vertical-align: top;
+}
+
+.chat .thumbnail_area >.thumbnail_img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+.chat .text_area {
+    width: 240px;
+}
+
+.chat .text_area > .chat_text {
+    margin: 5px;
+}
+
+
+
+.chat_input {
+    border: 1px solid #bcbcbc;
+    border-radius: 0px;
+    height: 1.5em;
+}
+  
