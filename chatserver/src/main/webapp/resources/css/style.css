@@ -12,11 +12,18 @@ body {
 }
 
 .main_area {
-    
     background-color: aqua;
     width: 500px;
     height: 900px;
     overflow: auto;
+}
+
+.chat_area {
+    width: 100%;
+}
+
+.input_area {
+    width: 100%;
 }
 
 .chat {
@@ -32,7 +39,8 @@ body {
 .chat .thumbnail_area >.thumbnail_img {
     width: 60px;
     height: 60px;
-    border-radius: 10px;
+    border-radius: 50px;
+    border: 3px solid red;
 }
 
 .chat .text_area {
