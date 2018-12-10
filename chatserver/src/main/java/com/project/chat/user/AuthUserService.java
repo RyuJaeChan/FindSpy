@@ -25,7 +25,7 @@ public class AuthUserService implements UserDetailsService {
 		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		AuthUser a = new AuthUser(user.getUserId(), user.getPassword(), authorities);
+		AuthUser a = new AuthUser(user.getUserId(), user.getPassword(), authorities, user.getName());
 		System.out.println("A : " + a);
 		return a;
 	}

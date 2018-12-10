@@ -11,17 +11,17 @@ import lombok.Data;
 @Data
 public class AuthUser implements UserDetails {
 	private static final long serialVersionUID = -480169969742996463L;
-	private String username;
+	private String userId;
+	private String userName;
 	private String password;
 	private List<GrantedAuthority> authorities;
 	
-	private String name;
-
 	@SuppressWarnings("unchecked")
-	public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-		this.username = username;
+	public AuthUser(String userId, String password, Collection<? extends GrantedAuthority> authorities, String userName) {
+		this.userId = userId;
 		this.password = password;
 		this.authorities = (List<GrantedAuthority>) authorities;
+		this.userName = userName;
 	}
 
 	@Override
@@ -41,8 +41,12 @@ public class AuthUser implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.userName;
 	}
 
 }

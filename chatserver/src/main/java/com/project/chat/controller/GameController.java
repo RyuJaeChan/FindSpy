@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.project.chat.gameroom.ChatMessage;
 import com.project.chat.gameroom.Gameroom;
 import com.project.chat.gameroom.GameroomRepository;
-import com.project.chat.user.AuthUser;
 
 
 //https://www.baeldung.com/websockets-spring
@@ -67,9 +65,12 @@ public class GameController {
 	 */
 	@GetMapping("/gameroom/{id}")
 	public String gameroom(@PathVariable Integer id, ModelMap modelMap, Principal principal) {
+		System.out.println("principal : " + principal);
+		System.out.println("principal.getName() : " + principal.getName());
 		Gameroom gameroom = gameroomRepository.getGameroom(id);
 		
-		boolean result =gameroomRepository.joinGameroom(id, (AuthUser)principal);
+		
+		boolean result =gameroomRepository.joinGameroom(id, principal.getName());
 		
 		modelMap.put("gameroom", gameroom);
 		modelMap.put("result", result);

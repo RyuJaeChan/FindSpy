@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.project.chat.user.AuthUser;
-
 public class GameroomRepository {
 	//Thread-Safe
 	private ConcurrentHashMap<Integer, Gameroom> gamerooms = new ConcurrentHashMap<>();
@@ -25,9 +23,9 @@ public class GameroomRepository {
 		return gamerooms.get(id);
 	}
 	
-	public boolean joinGameroom(Integer id, AuthUser authUser) {
+	public boolean joinGameroom(Integer id, String userId) {
 		Gameroom gameroom = gamerooms.get(id);
-		return gameroom.add(authUser);
+		return gameroom.add(userId);
 	}
 	
 }
