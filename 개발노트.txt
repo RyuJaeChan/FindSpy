@@ -1,0 +1,36 @@
+use mysql
+
+create user 'dev'@'%' identified by 'qwe123';
+
+grant all on game.* to 'dev'@'%' identified by 'qwe123';
+
+flush privileges; 
+
+
+
+GCP 접속 안될 때 - mysql 서버 바인드 127.0.0.1를 수정해야한다.
+https://zetawiki.com/wiki/ERROR_2003_(HY000):_Can't_connect_to_MySQL_server_on
+
+mysql 원격 접속하기위해 my.cnf 수정
+
+vi /etc/mysql/my.cnf
+sudo vi /etc/mysql/mysql.conf.d
+
+myconf에 bind-address가 없으면 mysql.conf.d에서 위에있는거에 있다.
+
+
+
+날짜
+sudo dpkg-reconfigure tzdata
+
+
+
+CREATE TABLE `game`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` VARCHAR(45) CHARACTER SET 'utf8' NOT NULL,
+  `password` VARCHAR(45) CHARACTER SET 'utf8' NOT NULL,
+  `name` VARCHAR(45) CHARACTER SET 'utf8' NOT NULL,
+  `authority` VARCHAR(45) CHARACTER SET 'utf8' NOT NULL DEFAULT 'ROLE_USER',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
