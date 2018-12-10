@@ -10,8 +10,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.project.chat.entity.User;
-import com.project.chat.repository.UserRepository;
+import com.project.chat.user.User;
+import com.project.chat.user.UserRepository;
+import com.project.chat.user.UserService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {

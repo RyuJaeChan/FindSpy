@@ -1,28 +1,17 @@
 package com.project.chat.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.project.chat.entity.User;
-import com.project.chat.service.UserService;
+import com.project.chat.user.User;
+import com.project.chat.user.UserService;
 
 @Controller
 public class ViewController {
-	
-	@Autowired
-	private UserService userService;
-	
-	@GetMapping("/test")
-	public String mainPage() {
-		System.out.println("Test");
-		User user2 = new User();
-		user2.setName("test name2");
-		
-		userService.insert(user2);
-		return "index";
-	}
-	
 	@GetMapping("/game")
 	public String game() {
 		
@@ -33,6 +22,20 @@ public class ViewController {
 	public String chat() {
 		
 		return "chat";
+	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
+	@GetMapping("/main")
+	public String main(ModelMap modelMap, Principal principal) {
+		System.out.println("Test pric : " + principal);
+		
+		modelMap.put("user", principal);
+		
+		return "main";
 	}
 	
 	

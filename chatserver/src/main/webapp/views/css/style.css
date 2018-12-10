@@ -1,3 +1,17 @@
+@charset "utf-8";
+
+@media all and (min-width:320px) {
+
+}
+
+@media all and (min-width:768px) {
+
+}
+
+@media all and (min-width:1024px) {
+
+}
+
 body {
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -16,7 +30,7 @@ body {
     width: 500px;   
 }
 
-.chat_area {
+.chat_area {    
     background-color: blue;
     
     height: 450px;
@@ -70,4 +84,19 @@ body {
     border: none;
     color: white;
     cursor: pointer;
+}
+
+
+
+
+
+
+/*
+*   login
+*/
+
+.login_form {
+    width: 500px;
+    height: 500px;
+    background-color: white;
 }

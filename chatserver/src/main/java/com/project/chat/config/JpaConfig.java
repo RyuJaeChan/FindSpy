@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.project.chat.repository")
+@EnableJpaRepositories(basePackages = "com.project.chat")
 public class JpaConfig {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
@@ -33,8 +33,8 @@ public class JpaConfig {
 		emfb.setJpaVendorAdapter(adapter);
 		emfb.setJpaProperties(props);
 		emfb.setDataSource(dataSource);
-		emfb.setPersistenceUnitName("notDefault");
-		emfb.setPackagesToScan("com.project.chat.entity"); //Entity Package
+		emfb.setPersistenceUnitName("chat");
+		emfb.setPackagesToScan("com.project.chat"); //Entity Package
 		return emfb;
 	}
 	

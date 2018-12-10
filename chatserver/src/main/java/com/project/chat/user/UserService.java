@@ -1,12 +1,9 @@
-package com.project.chat.service;
+package com.project.chat.user;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.project.chat.entity.User;
-import com.project.chat.repository.UserRepository;
 
 @Service
 public class UserService {

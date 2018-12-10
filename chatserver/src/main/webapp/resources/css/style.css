@@ -1,21 +1,102 @@
+@charset "UTF-8";
+
+:root {
+    --header-background-color: #0ea6ac;
+    --html-background-color: #fafafa;
+
+}
+
+html, body {
+    height: 100%;
+}
+
 body {
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background-color: black;
-    height: 100%;
+
+    margin:0;
+    padding:0;
+    border:0;
+}
+
+
+/*
+* 모바일
+*/
+
+body {
+    background-color: red;
 }
 
 .wrap {
-    height: 90%;
+    margin: 0 auto;
+    background-color: aqua;
+    height: calc(100% - 30px);
+    overflow: auto;
+    width: 100%;
 }
 
-.main_area {
-    background-color: aqua;
+.padding {
+    height: 50px;
+}
+
+.input_area {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+}
+
+
+
+/*
+* 태블릿
+*/
+@media all and (min-width: 768px) {
+
+    body {
+        background-color: blue;
+    }
+    .wrap {
+        width: 500px;
+        height: 500px;
+    }
+}
+
+
+/*
+* PC
+*/
+@media all and (min-width: 960px) {
+
+body {
+    background-color: yellow;
+}
+
+.wrap {
     width: 500px;
-    height: 900px;
-    overflow: auto;
+}
+
+.input_area {
+    position: absolute;
+    top: 500px;
+    background-color: blue;
+    width: 400px;
+    height: 30px;
+}
+
+}
+
+
+.header_area {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-color: var(--header-background-color);
 }
 
 .chat_area {
