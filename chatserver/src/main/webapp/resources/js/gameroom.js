@@ -78,9 +78,27 @@ function initialize() {
     let inputText = document.querySelector(".input_area .chat_input");
 
     sendButton.addEventListener("click", function() {
+        if(inputText.value == "") {
+            return;
+        }
+
         console.log("send button evt inputText.value : " + inputText.value);
         socketClient.send(inputText.value);
+        inputText.value = "";
     });
+
+    document.addEventListener("keydown", function(evt) {
+        if(evt.keyCode === 13) {
+            socketClient.send(inputText.value);
+            inputText.value = "";
+        }
+    });
+
+    window.addEventListener("beforeunload", function () {
+        console.log("beforeunload evt!");
+        socketClient.disconnect();
+    });
+      
 
 };
 

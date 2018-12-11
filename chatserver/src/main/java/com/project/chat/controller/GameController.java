@@ -113,8 +113,16 @@ public class GameController {
 	
 	@MessageMapping("/join")
 	public void joinMessage(ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
-		message.setType(MessageType.ARERT);
+		message.setType(MessageType.ALERT);
 		message.setMessage(message.getWriter() + "님이 참가하였습니다.");
+		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
+	}
+	
+	@MessageMapping("/quit")
+	public void quitMessage(ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
+		message.setType(MessageType.ALERT);
+		message.setMessage(message.getWriter() + "님이 퇴장하였습니다.");
+		System.out.println("qmessage : " + message);
 		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
 	}
 	

@@ -25,7 +25,7 @@
 				</div>
 		
 				<div class="input_area">
-					<input class="chat_input" type="text" name="값의 이름" value="값" />
+					<input class="chat_input" type="text" name="값의 이름" placeholder="메시지를 입력해주세요." />
 					<button class="send_button">SEND</button>
 				</div>
 			</div>

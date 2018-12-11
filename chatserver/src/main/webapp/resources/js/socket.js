@@ -15,7 +15,7 @@ let socketClient = {
         this.socket = new SockJS(this.path + "/sock");
         
         this.stompClient = Stomp.over(this.socket);
-        this.stompClient.debug = null;   //console log off
+        this.stompClient.debug = () => {};  //console log off
 
         this.stompClient.connect({},
             function (frame) {
@@ -34,12 +34,13 @@ let socketClient = {
                     console.log("message.gameroomId : " + messageObj.gameroomId);
                     console.log("message.writer" + messageObj.writer);
                     console.log("message.message : " + messageObj.message);
+                    console.log("message.type : " + messageObj.type);
 
                     switch(messageObj.type) {
                         case "MESSAGE":
                             chatManager.appendMessage(messageObj);
                             break;
-                        case "EVENT":
+                        case "ALERT":
                             chatManager.appendAlertMessage(messageObj);
                             break;
                     }
@@ -53,6 +54,12 @@ let socketClient = {
          //*/
     },
     disconnect: function () {
+        let msg = {};
+        msg.gameroomId = this.roomid;
+        msg.writer = this.userId;
+        msg.message = message;
+
+        this.stompClient.send("/game/quit", {}, JSON.stringify(msg));
         this.stompClient.disconnect();
         console.log("disconnected!!");
     },

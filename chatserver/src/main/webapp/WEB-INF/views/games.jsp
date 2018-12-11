@@ -20,7 +20,7 @@
 			</form>
 		</div>
 		<div class="gamelist_area">
-			<c:if test="${list.size()} eq 0">
+			<c:if test="${list.size() eq 0}">
 				<p>참가 가능한 방이 없습니다.</p>
 			</c:if>
 			<ul>
