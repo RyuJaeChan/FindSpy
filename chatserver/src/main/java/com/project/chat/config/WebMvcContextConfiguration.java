@@ -29,7 +29,7 @@ public class WebMvcContextConfiguration  extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		//registry.addViewController("/").setViewName("mainpage");
+		registry.addViewController("/loginform").setViewName("loginform");
 		
 	}
 

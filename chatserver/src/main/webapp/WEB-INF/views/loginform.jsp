@@ -4,8 +4,9 @@
 <html lang="ko">
     <head>
         <meta charset="utf-8">
-        <title>Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
         <link href="./css/style.css?ver=1" rel="stylesheet">
+        <title>Login</title>
     </head>
     <body>
         <div class="login_form">

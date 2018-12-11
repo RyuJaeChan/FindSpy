@@ -11,7 +11,7 @@ public class GameroomRepository {
 	
 	public Integer createGameroom() {
 		Integer id = seq.incrementAndGet();
-		gamerooms.put(id, new Gameroom());
+		gamerooms.put(id, new Gameroom(id));
 		return id;
 	}
 	
@@ -25,7 +25,7 @@ public class GameroomRepository {
 	
 	public boolean joinGameroom(Integer id, String userId) {
 		Gameroom gameroom = gamerooms.get(id);
-		return gameroom.add(userId);
+		return gameroom.addUser(userId);
 	}
 	
 }

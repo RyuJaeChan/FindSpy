@@ -19,7 +19,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	@Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
 		//client에서 SEND 요청을 처리한다.
-		config.setApplicationDestinationPrefixes("/app");
+		config.setApplicationDestinationPrefixes("/game");
 		
 		/*
 		Spring Refernece에서는 /topic, /queue가 주로 등장한다.

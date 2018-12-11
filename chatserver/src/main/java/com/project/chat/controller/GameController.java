@@ -4,8 +4,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.project.chat.gameroom.ChatMessage;
+import com.project.chat.gameroom.GameMessage;
 import com.project.chat.gameroom.Gameroom;
 import com.project.chat.gameroom.GameroomRepository;
+import com.project.chat.util.MessageType;
 
 
 //https://www.baeldung.com/websockets-spring
@@ -38,7 +40,8 @@ public class GameController {
 	
 	private GameroomRepository gameroomRepository = new GameroomRepository();
 	
-	private SimpMessagingTemplate s;
+	@Autowired
+	private SimpMessagingTemplate smt;
 	
 	//게임방 조회
 	@GetMapping("/games")
@@ -69,33 +72,69 @@ public class GameController {
 		System.out.println("principal.getName() : " + principal.getName());
 		Gameroom gameroom = gameroomRepository.getGameroom(id);
 		
-		
 		boolean result =gameroomRepository.joinGameroom(id, principal.getName());
 		
+		System.out.println("gameroom info :" + gameroom);
+		
 		modelMap.put("gameroom", gameroom);
+		modelMap.put("userId", principal.getName());
 		modelMap.put("result", result);
+		modelMap.put("roomid", gameroom.getId());
 		
 		return "gameroom";
+	}
+	
+	@GetMapping("/words")
+	public String keyWord(Principal principal) {
+		
+		
+		
+		return "result";
 	}
 	
 	//client에서 보낸 메시지를 처리한다.
 	//config에서 setApplicationDestinationPrefixes를 통해 등록한 url/send 이런식으로 클라이언트에서 보낸다.
-	@MessageMapping("/send")
-	public String s(ChatMessage message, SimpMessageHeaderAccessor headerAccessor, Principal princ) {
+	// 메시지 응답은 /sub/gameroom/{roomid}" 이런식으로 하면 된다.
+	@MessageMapping("/message")
+	public String sendMessage(ChatMessage message, SimpMessageHeaderAccessor headerAccessor, Principal princ) {
 		System.out.println("chatmessage : " + message);
 		System.out.println("headerAccessor : " + headerAccessor);
+		System.out.println("headerAccessor.getUser() : " + headerAccessor.getUser());
+		
+		if(message.getType() == MessageType.CLUE) {
+			Gameroom gameroom = gameroomRepository.getGameroom(message.getGameroomId());
+			gameroom.getUserSet().add(message.getWriter());
+		}
+		
 		System.out.println("pric : " + princ);
-		s.convertAndSend("/sub/");
+		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
 		return "send something";
 	}
 	
-	
-	//해당 게임방에 참가
-	@SendTo("/sub/gameroom")
-	public String gameroom(String message, SimpMessageHeaderAccessor headerAccessor) {
-		System.out.println("message : " + message);
-		System.out.println("headerAccessor : " + headerAccessor);
-		return "gameroom";
+	@MessageMapping("/join")
+	public void joinMessage(ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
+		message.setType(MessageType.ARERT);
+		message.setMessage(message.getWriter() + "님이 참가하였습니다.");
+		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
 	}
 	
+	@MessageMapping("/step")
+	public void sendGameStep(GameMessage message, SimpMessageHeaderAccessor headerAccessor) {
+		Gameroom gameroom = gameroomRepository.getGameroom(message.getRoomId());
+		gameroom.gameProcess(message);
+		
+		//
+		/*
+		 * gameroom = repo(message.getGameroomId());
+		 * if gameMessage.getType() == START ?
+		 * 	gameroom.start()
+		 * else if (ASSIGN_WORDS) {
+		 * 	
+		 * }
+		 *  
+		 *  
+		// */
+		
+	}
+
 }

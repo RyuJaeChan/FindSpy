@@ -42,24 +42,32 @@ body {
     min-width: 300px;
     margin: 0 auto;
     background-color: var(--blue-color-50);
-    height: calc(100% - 30px);
-    overflow: auto;
+    height: 100%;
     width: 100%;
 }
 
 .header_area {
-    position: fixed;
     width: 100%;
     height: 50px;
     line-height: 50px;
     text-align: center;
     background-color: var(--blue-color-900);
     color: white;
+    position: relative;
 }
 
-.padding {
-    height: 50px;
+.header_area p {
+    margin: 0;
 }
+
+.header_area .button {
+    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 5px;
+}
+
 
 .input_area {
     background-color: var(--blue-color-400);
@@ -80,7 +88,7 @@ body {
 }
 
 .wrap {
-    height: calc(100% - 30px);
+    height: 100%;
     width: 500px;
 }
 
@@ -105,7 +113,7 @@ body {
 }
 
 .wrap {
-    height: calc(100% - 30px);
+    height: 100%;
     width: 500px;
 }
 
@@ -123,18 +131,20 @@ body {
 .chat_area {
     width: 100%;
     min-width: 300px;
+    overflow-y: scroll;
+    height: calc(100% - 80px);
 }
 
 .chat_area .chat_block {
     clear: both;
     padding-left: 5px;
-    height: 100%;
 }
 
 .chat_area .chat_block .thumbnail_area {
     clear: both;
     float: left;
     width: 60px;
+    height: 60px;
     vertical-align: top;
 }
 
@@ -148,8 +158,8 @@ body {
 
 .chat_area .chat_block .text_area {
     float: left;
-    width: 240px;
     margin-left: 15px;
+    margin-top: 5px;
 }
 
 .chat_area .chat_block .text_area .margin{
@@ -162,14 +172,16 @@ body {
     background-color: var(--blue-color-100);
     padding: 5px;
     margin-left: 10px;
+    max-width: 240px;
 }
 
 .chat_area .mymessage {
+    clear: both;
     float: right;
+    margin-top: 5px;
 }
 
 .chat_area .mymessage .text_area {
-    width: 240px;
     margin-right: 5px;
 }
 
@@ -178,7 +190,7 @@ body {
     border-radius: 5px;
     background-color: var(--blue-color-100);
     padding: 5px;
-    width: 220px;
+    max-width: 240px;
     float: left;
 }
 
@@ -211,4 +223,44 @@ body {
 .input_area .send_button {
     width: 60px;
     display: inline-block;
+}
+
+
+
+
+.wrap .gamelist_area {
+    
+}
+
+.wrap .gamelist_area > p {
+    text-align: center;
+}
+
+.wrap .gamelist_area ul{
+    list-style: none;
+    padding-left: 0px;
+}
+
+.wrap .gamelist_area ul > a:link {
+    color: white;
+    text-decoration: none;
+}
+
+.wrap .gamelist_area ul > a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.wrap .gamelist_area ul li{
+    list-style: none;
+    background-color: var(--blue-color-400);
+    margin: 5px;
+    border-radius: 5px;
+    padding-left: 5px;
+    height: 40px;
+    line-height: 40px;
+}
+
+.wrap .gamelist_area ul li:hover{
+    background-color: var(--blue-color-700);
 }
