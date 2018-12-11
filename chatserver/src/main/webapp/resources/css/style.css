@@ -1,9 +1,17 @@
 @charset "UTF-8";
 
 :root {
-    --header-background-color: #0ea6ac;
-    --html-background-color: #fafafa;
-
+    --blue-color-one: #2196F3;
+    --blue-color-50: #e3f2fd;
+    --blue-color-100: #bbdefb;
+    --blue-color-200: #90caf9;
+    --blue-color-300: #64b5f6;
+    --blue-color-400: #42a5f5;
+    --blue-color-500: #2196f3;
+    --blue-color-600: #1e88e5;
+    --blue-color-700: #1976d2;
+    --blue-color-800: #1565c0;
+    --blue-color-900: #0d47a1;
 }
 
 html, body {
@@ -27,15 +35,26 @@ body {
 */
 
 body {
-    background-color: red;
+    background-color: var(--blue-color-50);
 }
 
 .wrap {
+    min-width: 300px;
     margin: 0 auto;
-    background-color: aqua;
+    background-color: var(--blue-color-50);
     height: calc(100% - 30px);
     overflow: auto;
     width: 100%;
+}
+
+.header_area {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-color: var(--blue-color-900);
+    color: white;
 }
 
 .padding {
@@ -43,6 +62,7 @@ body {
 }
 
 .input_area {
+    background-color: var(--blue-color-400);
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -50,19 +70,28 @@ body {
 }
 
 
-
 /*
 * 태블릿
 */
 @media all and (min-width: 768px) {
 
-    body {
-        background-color: blue;
-    }
-    .wrap {
-        width: 500px;
-        height: 500px;
-    }
+body {
+    background-color: var(--blue-color-100);
+}
+
+.wrap {
+    height: calc(100% - 30px);
+    width: 500px;
+}
+
+.header_area {
+    width: 500px;
+}
+
+.input_area {
+    width: 500px;
+}
+
 }
 
 
@@ -72,71 +101,114 @@ body {
 @media all and (min-width: 960px) {
 
 body {
-    background-color: yellow;
+    background-color: var(--blue-color-100);
 }
 
 .wrap {
+    height: calc(100% - 30px);
+    width: 500px;
+}
+
+.header_area {
     width: 500px;
 }
 
 .input_area {
-    position: absolute;
-    top: 500px;
-    background-color: blue;
-    width: 400px;
-    height: 30px;
+    width: 500px;
 }
 
 }
 
-
-.header_area {
-    position: fixed;
-    width: 100%;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-    background-color: var(--header-background-color);
-}
 
 .chat_area {
     width: 100%;
+    min-width: 300px;
 }
 
-.input_area {
-    width: 100%;
+.chat_area .chat_block {
+    clear: both;
+    padding-left: 5px;
+    height: 100%;
 }
 
-.chat {
-    background-color: blanchedalmond;
-    width: 300px;
-}
-
-.chat .thumbnail_area {
+.chat_area .chat_block .thumbnail_area {
+    clear: both;
+    float: left;
     width: 60px;
     vertical-align: top;
 }
 
-.chat .thumbnail_area >.thumbnail_img {
+.chat_area .chat_block .thumbnail_area >.thumbnail_img {
+    margin-top:5px;
     width: 60px;
     height: 60px;
-    border-radius: 50px;
-    border: 3px solid red;
+    border-radius: 20px;
+    border: 0px solid var(--blue-color-800);;
 }
 
-.chat .text_area {
+.chat_area .chat_block .text_area {
+    float: left;
     width: 240px;
+    margin-left: 15px;
 }
 
-.chat .text_area > .chat_text {
-    margin: 5px;
+.chat_area .chat_block .text_area .margin{
+    float: left;
+    width: 10px;
+}
+
+.chat_area .chat_block .text_area .message {
+    border-radius: 5px;
+    background-color: var(--blue-color-100);
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.chat_area .mymessage {
+    float: right;
+}
+
+.chat_area .mymessage .text_area {
+    width: 240px;
+    margin-right: 5px;
+}
+
+.chat_area .mymessage .text_area .message {
+    margin: 0;
+    border-radius: 5px;
+    background-color: var(--blue-color-100);
+    padding: 5px;
+    width: 220px;
+    float: left;
+}
+
+.chat_area .mymessage .text_area .margin {
+    float: left;
+    width: 10px;
+}
+
+.chat_area .alert_message {
+    clear: both;
+    text-align: center;
+    font-size: 20px;
+    line-height: 50px;
+    height: 50px;
 }
 
 
+.input_area {
+    line-height: 30px;
+}
 
-.chat_input {
+.input_area .chat_input {
+    margin-left: 3px;
     border: 1px solid #bcbcbc;
     border-radius: 0px;
     height: 1.5em;
+    width: calc(100% - 80px);
 }
-  
+
+.input_area .send_button {
+    width: 60px;
+    display: inline-block;
+}
