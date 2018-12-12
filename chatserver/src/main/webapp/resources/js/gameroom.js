@@ -94,9 +94,10 @@ function initialize() {
         }
     });
 
-    window.addEventListener("beforeunload", function () {
+    window.addEventListener("beforeunload", function (evt) {
         console.log("beforeunload evt!");
         socketClient.disconnect();
+        return "byby";
     });
       
 

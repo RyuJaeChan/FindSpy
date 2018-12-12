@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -38,7 +40,8 @@ public class GameController {
 	}
 	*/
 	
-	private GameroomRepository gameroomRepository = new GameroomRepository();
+	@Autowired
+	private GameroomRepository gameroomRepository;
 	
 	@Autowired
 	private SimpMessagingTemplate smt;
@@ -73,8 +76,6 @@ public class GameController {
 		Gameroom gameroom = gameroomRepository.getGameroom(id);
 		
 		boolean result =gameroomRepository.joinGameroom(id, principal.getName());
-		
-		System.out.println("gameroom info :" + gameroom);
 		
 		modelMap.put("gameroom", gameroom);
 		modelMap.put("userId", principal.getName());
@@ -115,6 +116,9 @@ public class GameController {
 	public void joinMessage(ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
 		message.setType(MessageType.ALERT);
 		message.setMessage(message.getWriter() + "님이 참가하였습니다.");
+		
+		System.out.println("join message : " + message);
+
 		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
 	}
 	
@@ -123,6 +127,9 @@ public class GameController {
 		message.setType(MessageType.ALERT);
 		message.setMessage(message.getWriter() + "님이 퇴장하였습니다.");
 		System.out.println("qmessage : " + message);
+		
+		gameroomRepository.quitGameroom(message.getGameroomId(), message.getWriter());
+		
 		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
 	}
 	

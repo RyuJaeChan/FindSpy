@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class GameroomRepository {
 	//Thread-Safe
 	private ConcurrentHashMap<Integer, Gameroom> gamerooms = new ConcurrentHashMap<>();
@@ -26,6 +29,15 @@ public class GameroomRepository {
 	public boolean joinGameroom(Integer id, String userId) {
 		Gameroom gameroom = gamerooms.get(id);
 		return gameroom.addUser(userId);
+	}
+	
+	public boolean quitGameroom(Integer id, String userId) {
+		Gameroom gameroom = gamerooms.get(id);
+		gameroom.delUser(userId);
+		if(gameroom.getPlayers().size() == 0) {
+			gamerooms.remove(id);
+		}
+		return true;
 	}
 	
 }

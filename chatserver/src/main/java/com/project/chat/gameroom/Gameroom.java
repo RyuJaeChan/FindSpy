@@ -19,7 +19,7 @@ public class Gameroom {
 	private Integer id;
 	final static Integer MAX_SIZE = 4;
 	//thread safe
-	private List<String> users = Collections.synchronizedList(new ArrayList<>());
+	private Set<String> players = Collections.synchronizedSet(new HashSet<>());
 	private GameStep gameStep = GameStep.WAIT;
 	private Set<String> userSet = Collections.synchronizedSet(new HashSet<>());
 	private Timer timer = new Timer();
@@ -36,19 +36,19 @@ public class Gameroom {
 	}
 	
 	public boolean addUser(String e) {
-		if(users.size() >= MAX_SIZE) {
+		if(players.size() >= MAX_SIZE) {
 			return false;
 		}
 		
-		return users.add(e);
+		return players.add(e);
 	}
 	
 	public boolean delUser(String e) {
-		if(users.size() <= 0) {
+		if(players.size() <= 0) {
 			return false;
 		}
 		
-		return users.remove(e);
+		return players.remove(e);
 	}
 	
 	public void gameProcess(GameMessage gameMessage) {

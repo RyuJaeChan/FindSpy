@@ -26,7 +26,7 @@
 			<ul>
 				<c:forEach items="${list}" var="item">
 					<a href="./gameroom/${item.getId()}">
-						<li>user_name1님의 게임방</li>
+						<li>${item}님의 게임방</li>
 					</a>
 				</c:forEach>
 			</ul>

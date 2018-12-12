@@ -57,7 +57,7 @@ let socketClient = {
         let msg = {};
         msg.gameroomId = this.roomid;
         msg.writer = this.userId;
-        msg.message = message;
+        //msg.message = message;
 
         this.stompClient.send("/game/quit", {}, JSON.stringify(msg));
         this.stompClient.disconnect();
