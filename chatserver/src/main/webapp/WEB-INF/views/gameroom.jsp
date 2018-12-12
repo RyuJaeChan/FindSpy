@@ -12,23 +12,45 @@
 </head>
 
 <body>
-		<div class="wrap">
-			<input class="user_id" type="hidden" data-user_id="${userId}">
-			<input class="roomid" type="hidden" data-roomid="${gameroom.getId()}">
-			<input class="path" type="hidden" data-path="${pageContext.request.contextPath}">
-				<div class="header_area">
-					Welcome!
-				</div>
-		
-				<div class="chat_area">
-					
-				</div>
-		
-				<div class="input_area">
-					<input class="chat_input" type="text" name="값의 이름" placeholder="메시지를 입력해주세요." />
-					<button class="send_button">SEND</button>
-				</div>
+	<div class="menu">
+		<div>
+			<button class="close_button">닫기</button>
+		</div>
+		<div>
+			<ul class="user_list">
+				<li>a</li>
+				<li>b</li>
+				<li>c</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="wrap">
+		<input class="user_id" type="hidden" data-user_id="${userId}">
+		<input class="roomid" type="hidden" data-roomid="${gameroom.getId()}">
+		<input class="path" type="hidden" data-path="${pageContext.request.contextPath}">
+		<div class="header_area">
+			<!-- img class="arrow" src="${pageContext.request.contextPath}/img/left.png"-->
+			<div class="button_area">
+				<img class="menu_button" src="${pageContext.request.contextPath}/img/menu_button.png">
 			</div>
+			<div class="r_area">
+				<img class="play_button" src="${pageContext.request.contextPath}/img/play.png">
+			</div>
+			<div>
+				Gameroom
+			</div>
+		</div>
+
+		<div class="chat_area">
+
+		</div>
+
+		<div class="input_area">
+			<input class="chat_input" type="text" name="값의 이름" placeholder="메시지를 입력해주세요." />
+			<button class="send_button">SEND</button>
+		</div>
+	</div>
 
 	<script type="template" id="chat_template">
 			<div class="chat_block">
@@ -64,6 +86,7 @@
 	<script src="${pageContext.request.contextPath}/js/lib/sockjs.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 	<script src="${pageContext.request.contextPath}/js/socket.js"></script>
+	<script src="${pageContext.request.contextPath}/js/menu.js"></script>
 	<script src="${pageContext.request.contextPath}/js/gameroom.js"></script>
 </body>
 

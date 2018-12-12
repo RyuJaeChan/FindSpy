@@ -9,8 +9,6 @@ let chatManager = {
     recvTemplate: document.querySelector("#chat_template").innerText,
     myMessageTemplate: document.querySelector("#mymessage").innerText,
 
-    roomid: document.querySelector(".roomid").dataset.roomid,
-    userId: document.querySelector(".user_id").dataset.user_id,
     lastUser: "",
 
     appendMessage: function(messageObj) {
@@ -64,34 +62,119 @@ let chatManager = {
     },
     showDisconnectMessage: function() {
 
-    }
+    },
+};
 
+let GameManager = {
+    roomid: document.querySelector(".roomid").dataset.roomid,
+    userId: document.querySelector(".user_id").dataset.user_id,
+
+    mode: "CHAT",   //CHAT, GAME
+    isMyTurn: false,
+    
+    startGame: function() {
+        let msg = {};
+        msg.gameroomId = this.roomid;
+        msg.writer = this.userId;
+        msg.message = "start message";
+        msg.type = "GAME_START";
+
+        socketClient.send(msg);
+    },
+    sendMessage: function(inputValue) {
+        if(this.mode == "GAME" && this.isMyTurn == false) {
+            console.log("it is not my turn");
+            return;
+        }
+
+
+        let msg = {};
+        msg.gameroomId = this.roomid;
+        msg.writer = this.userId;
+        msg.message = inputValue;
+        msg.type = this.mode == "CHAT" ? "MESSAGE" : "CLUE";
+
+        socketClient.send(msg);
+    },
+    setMode: function(mode) {
+        this.mode = mode;
+    }
 };
 
 
 
 
 function initialize() {
-    socketClient.initialize(chatManager);
+    let roomid =  document.querySelector(".roomid").dataset.roomid;
+    let userId = document.querySelector(".user_id").dataset.user_id;
+    let path = document.querySelector(".path").dataset.path;
+
+    /*
+    *   - paramObj
+    *   pathUrl         : connect Url
+    *   roomId          : game room id
+    *   callBack        : message 수신 처리
+    *   failCallBack    : disconnect 실패 처리
+    */
+    socketClient.initialize({
+        pathUrl: path,
+        roomId : roomid,
+        callBack: function(messageObj) {
+            console.log("callBack func called!");
+            switch(messageObj.type) {
+                case "MESSAGE":
+                    chatManager.appendMessage(messageObj);
+                    break;
+                case "ALERT":
+                    chatManager.appendAlertMessage(messageObj);
+                    break;
+                case "GAME_START":
+
+                    break;
+                case "DESCRIPTION_START":
+
+                    break;
+                case "TIME_OUT":
+
+                    break;
+                case "SELECT_START":
+                
+                    break;
+                case "RESULT":
+
+                    break;
+            }
+        },
+        failCallBack: function() {
+
+        }
+    });
 
     let sendButton = document.querySelector(".input_area .send_button");
-    let inputText = document.querySelector(".input_area .chat_input");
-
     sendButton.addEventListener("click", function() {
         if(inputText.value == "") {
             return;
         }
-
-        console.log("send button evt inputText.value : " + inputText.value);
-        socketClient.send(inputText.value);
+        GameManager.sendMessage(inputText.value);
         inputText.value = "";
     });
 
+    let inputText = document.querySelector(".input_area .chat_input");
     document.addEventListener("keydown", function(evt) {
         if(evt.keyCode === 13) {
-            socketClient.send(inputText.value);
+            if(inputText.value == "") {
+                return;
+            }
+
+            GameManager.sendMessage(inputText.value);
             inputText.value = "";
         }
+    });
+
+
+    let playButton = document.querySelector(".wrap .header_area .r_area .play_button")
+    playButton.addEventListener("click", function(){
+        GameManager.startGame();
     });
 
     window.addEventListener("beforeunload", function (evt) {

@@ -12,6 +12,7 @@ import lombok.Data;
 public class AuthUser implements UserDetails {
 	private static final long serialVersionUID = -480169969742996463L;
 	private String userId;
+	private Integer gameroomId = null;
 	private String userName;
 	private String password;
 	private List<GrantedAuthority> authorities;

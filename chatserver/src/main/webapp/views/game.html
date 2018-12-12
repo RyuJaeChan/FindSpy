@@ -9,10 +9,34 @@
 </head>
 
 <body>
+    <div class="menu">
+        <div>
+            <button class="close_button">닫기</button>
+        </div>
+        <div>
+            <ul class="user_list">
+                <li>a</li>
+                <li>b</li>
+                <li>c</li>
+            </ul>
+        </div>
+    </div>
+    
     <div class="wrap">
         <input class="roomid" type="hidden" data-roomid="11">
         <div class="header_area">
-            Head
+            <!-- img class="arrow" src="${pageContext.request.contextPath}/img/left.png"-->
+            <div class="button_area">
+                <img class="menu_button" src="../resources/img/menu_button.png">
+            </div>
+            <div class="r_area">
+                    <img class="play_button" src="../resources/img/play.png">
+                </div>
+            <div>
+                Head
+            </div>
+            
+            
         </div>
 
         <div class="chat_area">
@@ -118,8 +142,8 @@
     <script src="../resources/js/common/utils.js"></script>
     <script src="../resources/js/lib/sockjs.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
-    <script src="../resources/js/socket.js"></script>
-    <script src="../resources/js/gameroom.js"></script>
+    
+    <script src="../resources/js/menu.js"></script>
 </body>
 
 </html>
