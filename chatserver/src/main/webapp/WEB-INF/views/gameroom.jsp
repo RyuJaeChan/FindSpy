@@ -17,6 +17,9 @@
 			<button class="close_button">닫기</button>
 		</div>
 		<div>
+			<button class="start_button">게임 시작</button>
+		</div>
+		<div>
 			<ul class="user_list">
 				<li>a</li>
 				<li>b</li>
@@ -83,6 +86,7 @@
                 </div>
 	</script>
 	<script src="${pageContext.request.contextPath}/js/common/utils.js"></script>
+	<script src="${pageContext.request.contextPath}/js/common/ajax.js"></script>
 	<script src="${pageContext.request.contextPath}/js/lib/sockjs.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 	<script src="${pageContext.request.contextPath}/js/socket.js"></script>

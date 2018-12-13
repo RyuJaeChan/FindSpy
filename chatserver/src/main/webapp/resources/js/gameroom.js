@@ -61,26 +61,36 @@ let chatManager = {
         this._scrollDown();
     },
     showDisconnectMessage: function() {
-
+        //alert("서버와 연결이 끊어졌습니다.");
     },
 };
 
 let GameManager = {
     roomid: document.querySelector(".roomid").dataset.roomid,
     userId: document.querySelector(".user_id").dataset.user_id,
+    path: document.querySelector(".path").dataset.path,
 
-    mode: "CHAT",   //CHAT, GAME
     isMyTurn: false,
     
     startGame: function() {
-        let msg = {};
-        //msg.gameroomId = this.roomid;
-        msg.writer = this.userId;
-        msg.message = "start message";
-        msg.messageType = "GAME_START";
-
-        socketClient.send(msg);
+        socketClient.sendGameMessage({messageType : "GAME_REQUEST"});
     },
+    getWord: function() {
+        requestAjax({
+            url: this.path + "/words",
+            method: "GET",
+            success: function (response) {
+                let resultJson = JSON.parse(response);
+                printObject(resultJson);
+                console.log("response : " + resultJson.word);
+
+                chatManager.appendAlertMessage({message : "당신의 단어 : " + resultJson.word});
+
+                socketClient.sendGameMessage({messageType : "WORD_OK"});
+            }
+        });
+    },
+    /*
     sendMessage: function(inputValue) {
         if(this.mode == "GAME" && this.isMyTurn == false) {
             console.log("it is not my turn");
@@ -95,6 +105,14 @@ let GameManager = {
         msg.messageType = this.mode == "CHAT" ? "MESSAGE" : "CLUE";
 
         socketClient.send(msg);
+    }, */
+    sendChatMessage: function(inputValue) {
+        let msg = {};
+        msg.writer = this.userId;
+        msg.message = inputValue;
+        msg.messageType = "MESSAGE";
+
+        socketClient.sendChatMessage(msg);
     },
     setMode: function(mode) {
         this.mode = mode;
@@ -123,13 +141,18 @@ function initialize() {
             console.log("callBack func called!");
             switch(messageObj.messageType) {
                 case "MESSAGE":
+                    console.log("MESSAGE");
                     chatManager.appendMessage(messageObj);
                     break;
                 case "ALERT":
+                    console.log("ALERT");
                     chatManager.appendAlertMessage(messageObj);
                     break;
                 case "GAME_START":
-
+                    console.log("GAME_START");
+                    chatManager.appendAlertMessage({message:"게임이 시작됩니다."});
+                    //request ajax
+                    GameManager.getWord();
                     break;
                 case "DESCRIPTION_START":
 
@@ -146,7 +169,7 @@ function initialize() {
             }
         },
         failCallBack: function() {
-
+            alert("서버와 접속이 끊어졌습니다.");
         }
     });
 
@@ -155,7 +178,7 @@ function initialize() {
         if(inputText.value == "") {
             return;
         }
-        GameManager.sendMessage(inputText.value);
+        GameManager.sendChatMessage(inputText.value);
         inputText.value = "";
     });
 
@@ -166,11 +189,15 @@ function initialize() {
                 return;
             }
 
-            GameManager.sendMessage(inputText.value);
+            GameManager.sendChatMessage(inputText.value);
             inputText.value = "";
         }
     });
 
+    let startButton = document.querySelector(".menu .start_button");
+    startButton.addEventListener("click", function() {
+        //GameManager.send
+    });
 
     let playButton = document.querySelector(".wrap .header_area .r_area .play_button")
     playButton.addEventListener("click", function(){

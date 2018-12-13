@@ -19,16 +19,14 @@ public class Gameroom {
 	private Integer id;
 	final static Integer MAX_SIZE = 4;
 	//thread safe
-	private Set<String> players = Collections.synchronizedSet(new HashSet<>());
-	private GameStep gameStep = GameStep.WAIT;
-	private Set<String> userSet = Collections.synchronizedSet(new HashSet<>());
+	private List<String> players = Collections.synchronizedList(new ArrayList<>());
+	
+	private Integer sequence = 0;
+	//private Set<String> userSet = Collections.synchronizedSet(new HashSet<>());
 	private Timer timer = new Timer();
 	
-	@Autowired
-	private SimpMessagingTemplate smt;
-	
 	public Gameroom() {
-		
+
 	}
 	
 	public Gameroom(Integer id) {
@@ -51,35 +49,17 @@ public class Gameroom {
 		return players.remove(e);
 	}
 	
-	public void gameProcess(GameMessage gameMessage) {
-		
-		switch(gameMessage.getGameStep()) {
-		case CLIENT_START:
-			
-			break;
-		case CLIENT_MESSAGE:
-			
-			break;
-		case CLIENT_SELECT:
-			
-			break;
-		default:
-			break;
-		}
-		
-		
-		
-		
-		
+	public void initSequence() {
+		sequence = 0;
 	}
 	
-	
-	public void startGame() {
-		if(this.gameStep == GameStep.WAIT && this.userSet.size() == MAX_SIZE) {
-			//game start!!
-			
+	public String getCurrentUser() {
+		if(sequence < 0 || sequence > players.size()) {
+			return "";
 		}
-		//smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
+		
+		return players.get(sequence++);
 	}
+	
 	
 }

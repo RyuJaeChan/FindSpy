@@ -2,7 +2,9 @@ package com.project.chat.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,6 +19,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.chat.gameroom.ChatMessage;
 import com.project.chat.gameroom.GameMessage;
@@ -86,6 +89,8 @@ public class GameController {
 		System.out.println("principal.getName() : " + principal.getName());
 		Gameroom gameroom = gameroomRepository.getGameroom(id);
 		
+		System.out.println("gameroom : " + gameroom);
+		
 		modelMap.put("gameroom", gameroom);
 		modelMap.put("userId", principal.getName());
 		modelMap.put("roomid", gameroom.getId());
@@ -94,11 +99,13 @@ public class GameController {
 	}
 	
 	@GetMapping("/words")
-	public String keyWord(Principal principal) {
+	@ResponseBody
+	public Map<String, String> keyWord(@AuthenticationPrincipal AuthUser user) {
+		System.out.println("/words user : " + user);
 		
+		//System.out.println(Collections.singletonMap("word", gameroomRepository.getWord(user.getUsername())));
 		
-		
-		return "result";
+		return Collections.singletonMap("word", gameroomRepository.getWord(user.getUsername()));
 	}
 	
 	//client에서 보낸 메시지를 처리한다.
@@ -108,11 +115,6 @@ public class GameController {
 	public void sendMessage(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
 		System.out.println("message chatmessage : " + message);
 		System.out.println("message user : " + user);
-		
-		if(message.getMessageType() == MessageType.DESCRIPTION) {
-			Gameroom gameroom = gameroomRepository.getGameroom(user.getGameroomId());
-			gameroom.getUserSet().add(user.getUsername());
-		}
 		
 		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
 	}
@@ -137,24 +139,15 @@ public LiveWatchInfoMessage liveinfo(@DestinationVariable("liveid") String livei
 		
 		Integer roomId = Integer.parseInt(message.getMessage());
 		
-		boolean result = gameroomRepository.joinGameroom(roomId, message.getWriter());
+		boolean result = gameroomRepository.joinGameroom(roomId, user.getUsername());
 		
 		user.setGameroomId(roomId);
 		
 		message.setMessageType(MessageType.ALERT);
-		message.setMessage(message.getWriter() + "님이 참가하였습니다.");
+		message.setMessage(user.getUsername() + "님이 참가하였습니다.");
 		
 		System.out.println("join message : " + message);
 		smt.convertAndSend("/sub/gameroom/" + roomId, message);
-	}
-	
-	@MessageMapping("/test")
-	public void test(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
-		//System.out.println("test recv message : " + message);
-	
-		//System.out.println("test user user : " + user);
-		//boolean result = gameroomRepository.joinGameroom(message.getGameroomId(), user.getUsername());
-		
 	}
 	
 	@MessageMapping("/quit")
@@ -179,25 +172,15 @@ public LiveWatchInfoMessage liveinfo(@DestinationVariable("liveid") String livei
 		user.setGameroomId(null);
 	}
 	
-	@MessageMapping("/step")
-	public void sendGameStep(GameMessage message, @AuthenticationPrincipal AuthUser user) {
-		Gameroom gameroom = gameroomRepository.getGameroom(message.getRoomId());
-		gameroom.gameProcess(message);
+	@MessageMapping("/play")
+	public void sendGameStep(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
+		System.out.println("play message : " + message);
+		System.out.println("play user : " + user);
+		
+		gameroomRepository.gameProcess(user.getGameroomId(), message);
 		
 		
-		
-		//
-		/*
-		 * gameroom = repo(message.getGameroomId());
-		 * if gameMessage.getType() == START ?
-		 * 	gameroom.start()
-		 * else if (ASSIGN_WORDS) {
-		 * 	
-		 * }
-		 *  
-		 *  
-		// */
-		
+		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
 	}
 
 }

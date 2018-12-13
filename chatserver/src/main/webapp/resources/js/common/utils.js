@@ -8,3 +8,9 @@ function formatTemplate(str, data) {
 function replaceAll(str, searchStr, replaceStr) {
     return str.split(searchStr).join(replaceStr);
 };
+
+function printObject(obj) {
+    Object.keys(obj).forEach((key)=>{
+        console.log("key : " + key + "\tdata : " + obj[key])
+    });
+}

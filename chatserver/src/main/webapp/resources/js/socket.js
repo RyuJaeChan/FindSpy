@@ -24,36 +24,18 @@ let socketClient = {
             function (frame) {
                 console.log("connected : " + frame);
 
-                let msg = {};
-                console.log("paramObj.roomid : " + paramObj.roomId);
-                //msg.gameroomId = paramObj.roomId;
-                msg.message = paramObj.roomId;
-                msg.writer = "user2_name";
-
-                console.log("send join : " + JSON.stringify(msg));
-                this.stompClient.send("/game/join", {}, JSON.stringify(msg));
-
-                this.stompClient.send("/game/test", {}, JSON.stringify(msg));
+                console.log("join message : " + JSON.stringify({message:paramObj.roomId}));
+                this.stompClient.send("/game/join", {}, JSON.stringify({message:paramObj.roomId}));
 
                 this.stompClient.subscribe("/sub/gameroom/" + paramObj.roomId, function (message) {
                     let messageObj = JSON.parse(message.body);
 
                     //console.log("message.gameroomId : " + messageObj.gameroomId);
-                    console.log("message.writer" + messageObj.writer);
+                    console.log("message.writer : " + messageObj.writer);
                     console.log("message.message : " + messageObj.message);
                     console.log("message.messageType : " + messageObj.messageType);
 
                     paramObj.callBack(messageObj);
-                    /*
-                    switch(messageObj.type) {
-                        case "MESSAGE":
-                            chatManager.appendMessage(messageObj);
-                            break;
-                        case "ALERT":
-                            chatManager.appendAlertMessage(messageObj);
-                            break;
-                    }
-                     */
                 });
             }.bind(this),
             function(message) {
@@ -63,23 +45,19 @@ let socketClient = {
         );
          //*/
     },
-    disconnect: function (roomId, userId) {
-        let msg = {};
-        //msg.gameroomId = roomId;
-        msg.writer = userId;
-        msg.message = roomId;
-
-        this.stompClient.send("/game/quit", {}, JSON.stringify(msg));
+    disconnect: function () {
+        //dont need message
+        this.stompClient.send("/game/quit", {}, {});
         this.stompClient.disconnect();
         console.log("disconnected!!");
     },
-    send: function (messageObj) {
+    sendChatMessage: function (messageObj) {
         console.log("send message : " + JSON.stringify(messageObj));
-        this.stompClient.send("/game/test", {}, JSON.stringify(messageObj));
         this.stompClient.send("/game/message", {}, JSON.stringify(messageObj));
     },
     sendGameMessage: function(messageObj) {
-        this.stompClient.send("/game/step", {}, JSON.stringify(messageObj));
+        console.log("send message : " + JSON.stringify(messageObj));
+        this.stompClient.send("/game/play", {}, JSON.stringify(messageObj));
     }
 }
 

@@ -6,7 +6,7 @@ public enum MessageType {
 	GAME_REQUEST,		//game start request
 	WORD_OK,			//user get word and response
 	SELECT_OK,			//user select response 
-	DESCRIPTION,
+	DESCRIPTION,		// description message : it is also sent by server 
 	//Server -> Client message
 	ALERT,				//server's anouncement
 	GAME_START,			//game process start
