@@ -76,7 +76,9 @@ public class GameroomRepository {
 			message.setMessageType(MessageType.DESCRIPTION_START);
 			break;
 		case DESCRIPTION:
-			
+			if(gamerooms.get(gameroomId).getCurrentUser()) {
+				
+			}
 			
 			break;
 		case SELECT_OK:
