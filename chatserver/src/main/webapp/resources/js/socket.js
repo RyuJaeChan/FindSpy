@@ -24,10 +24,10 @@ let socketClient = {
             function (frame) {
                 console.log("connected : " + frame);
 
-
                 let msg = {};
                 console.log("paramObj.roomid : " + paramObj.roomId);
-                msg.gameroomId = paramObj.roomId;
+                //msg.gameroomId = paramObj.roomId;
+                msg.message = paramObj.roomId;
                 msg.writer = "user2_name";
 
                 console.log("send join : " + JSON.stringify(msg));
@@ -38,10 +38,10 @@ let socketClient = {
                 this.stompClient.subscribe("/sub/gameroom/" + paramObj.roomId, function (message) {
                     let messageObj = JSON.parse(message.body);
 
-                    console.log("message.gameroomId : " + messageObj.gameroomId);
+                    //console.log("message.gameroomId : " + messageObj.gameroomId);
                     console.log("message.writer" + messageObj.writer);
                     console.log("message.message : " + messageObj.message);
-                    console.log("message.type : " + messageObj.type);
+                    console.log("message.messageType : " + messageObj.messageType);
 
                     paramObj.callBack(messageObj);
                     /*
@@ -65,9 +65,9 @@ let socketClient = {
     },
     disconnect: function (roomId, userId) {
         let msg = {};
-        msg.gameroomId = roomId;
+        //msg.gameroomId = roomId;
         msg.writer = userId;
-        //msg.message = message;
+        msg.message = roomId;
 
         this.stompClient.send("/game/quit", {}, JSON.stringify(msg));
         this.stompClient.disconnect();
@@ -77,6 +77,9 @@ let socketClient = {
         console.log("send message : " + JSON.stringify(messageObj));
         this.stompClient.send("/game/test", {}, JSON.stringify(messageObj));
         this.stompClient.send("/game/message", {}, JSON.stringify(messageObj));
+    },
+    sendGameMessage: function(messageObj) {
+        this.stompClient.send("/game/step", {}, JSON.stringify(messageObj));
     }
 }
 

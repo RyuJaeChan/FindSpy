@@ -40,4 +40,12 @@ public class GameroomRepository {
 		return true;
 	}
 	
+	public void gameProcess(ChatMessage message) {
+		
+		
+		
+		
+	}
+	
+	
 }

@@ -6,9 +6,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +54,12 @@ public class GameController {
 	public String games(ModelMap modelMap, @AuthenticationPrincipal AuthUser user) {
 		System.out.println("games : authUser : " + user);
 		
+		AuthUser u = (AuthUser)SecurityContextHolder
+		        .getContext()
+		        .getAuthentication()
+		        .getPrincipal();
+		System.out.println("uuuu : " + u);
+		
 		List<Gameroom> list = new ArrayList<>(gameroomRepository.getGamerooms());
 		modelMap.put("list", list);
 		
@@ -77,8 +86,6 @@ public class GameController {
 		System.out.println("principal.getName() : " + principal.getName());
 		Gameroom gameroom = gameroomRepository.getGameroom(id);
 		
-
-		
 		modelMap.put("gameroom", gameroom);
 		modelMap.put("userId", principal.getName());
 		modelMap.put("roomid", gameroom.getId());
@@ -98,20 +105,16 @@ public class GameController {
 	//config에서 setApplicationDestinationPrefixes를 통해 등록한 url/send 이런식으로 클라이언트에서 보낸다.
 	// 메시지 응답은 /sub/gameroom/{roomid}" 이런식으로 하면 된다.
 	@MessageMapping("/message")
-	public String sendMessage(ChatMessage message, SimpMessageHeaderAccessor headerAccessor, Principal princ) {
-		System.out.println("chatmessage : " + message);
-		//System.out.println("user : " + user);
-		System.out.println("headerAccessor : " + headerAccessor);
-		System.out.println("headerAccessor.getUser() : " + headerAccessor.getUser());
+	public void sendMessage(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
+		System.out.println("message chatmessage : " + message);
+		System.out.println("message user : " + user);
 		
-		if(message.getType() == MessageType.DESCRIPTION) {
-			Gameroom gameroom = gameroomRepository.getGameroom(message.getGameroomId());
-			gameroom.getUserSet().add(message.getWriter());
+		if(message.getMessageType() == MessageType.DESCRIPTION) {
+			Gameroom gameroom = gameroomRepository.getGameroom(user.getGameroomId());
+			gameroom.getUserSet().add(user.getUsername());
 		}
 		
-		System.out.println("pric : " + princ);
-		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
-		return "send something";
+		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
 	}
 	
 	/*
@@ -127,52 +130,61 @@ public LiveWatchInfoMessage liveinfo(@DestinationVariable("liveid") String livei
     */
 	
 	@MessageMapping("/join")
-	public void joinMessage(ChatMessage message) { //, @AuthenticationPrincipal AuthUser user) {
+	public void joinMessage(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
 		System.out.println("join recv message : " + message);
+		System.out.println("join user : " + user);
 		//boolean result = gameroomRepository.joinGameroom(message.getGameroomId(), user.getUsername());
-		boolean result = gameroomRepository.joinGameroom(message.getGameroomId(), message.getWriter());
 		
-		//user.setGameroomId(message.getGameroomId());
+		Integer roomId = Integer.parseInt(message.getMessage());
 		
-		message.setType(MessageType.ALERT);
-		//message.setMessage(user.getUsername() + "님이 참가하였습니다.");
+		boolean result = gameroomRepository.joinGameroom(roomId, message.getWriter());
+		
+		user.setGameroomId(roomId);
+		
+		message.setMessageType(MessageType.ALERT);
 		message.setMessage(message.getWriter() + "님이 참가하였습니다.");
 		
 		System.out.println("join message : " + message);
-
-		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
+		smt.convertAndSend("/sub/gameroom/" + roomId, message);
 	}
 	
 	@MessageMapping("/test")
-	public void test(ChatMessage message, Principal p, AuthUser user) {//@AuthenticationPrincipal AuthUser user, 
-		System.out.println("test recv message : " + message);
-		System.out.println("test recv PPPPP111 : " + p);
-		
-		System.out.println("test recv PPPPP2222 : " + p);
-		System.out.println("test recv user : " + user);
+	public void test(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
+		//System.out.println("test recv message : " + message);
+	
+		//System.out.println("test user user : " + user);
 		//boolean result = gameroomRepository.joinGameroom(message.getGameroomId(), user.getUsername());
 		
 	}
 	
 	@MessageMapping("/quit")
 	public void quitMessage(@AuthenticationPrincipal AuthUser user) {
-		
-		
 		gameroomRepository.quitGameroom(user.getGameroomId(), user.getUsername());
-		user.setGameroomId(null);
 		
-		ChatMessage message = new ChatMessage();
+		/*
 		message.setType(MessageType.ALERT);
 		message.setMessage(message.getWriter() + "님이 퇴장하였습니다.");
 		System.out.println("qmessage : " + message);
 		
+		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
+		*/
+		ChatMessage message = ChatMessage
+									.builder()
+									.setType(MessageType.ALERT)
+									.setWriter(user.getUsername())
+									.build();
+		
 		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
+		
+		user.setGameroomId(null);
 	}
 	
 	@MessageMapping("/step")
-	public void sendGameStep(GameMessage message, SimpMessageHeaderAccessor headerAccessor) {
+	public void sendGameStep(GameMessage message, @AuthenticationPrincipal AuthUser user) {
 		Gameroom gameroom = gameroomRepository.getGameroom(message.getRoomId());
 		gameroom.gameProcess(message);
+		
+		
 		
 		//
 		/*

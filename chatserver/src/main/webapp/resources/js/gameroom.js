@@ -74,10 +74,10 @@ let GameManager = {
     
     startGame: function() {
         let msg = {};
-        msg.gameroomId = this.roomid;
+        //msg.gameroomId = this.roomid;
         msg.writer = this.userId;
         msg.message = "start message";
-        msg.type = "GAME_START";
+        msg.messageType = "GAME_START";
 
         socketClient.send(msg);
     },
@@ -89,10 +89,10 @@ let GameManager = {
 
 
         let msg = {};
-        msg.gameroomId = this.roomid;
+        //msg.gameroomId = this.roomid;
         msg.writer = this.userId;
         msg.message = inputValue;
-        msg.type = this.mode == "CHAT" ? "MESSAGE" : "CLUE";
+        msg.messageType = this.mode == "CHAT" ? "MESSAGE" : "CLUE";
 
         socketClient.send(msg);
     },
@@ -121,7 +121,7 @@ function initialize() {
         roomId : roomid,
         callBack: function(messageObj) {
             console.log("callBack func called!");
-            switch(messageObj.type) {
+            switch(messageObj.messageType) {
                 case "MESSAGE":
                     chatManager.appendMessage(messageObj);
                     break;
