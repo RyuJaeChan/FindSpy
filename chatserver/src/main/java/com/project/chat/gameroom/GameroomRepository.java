@@ -1,8 +1,6 @@
 package com.project.chat.gameroom;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,23 +8,16 @@ import org.springframework.stereotype.Component;
 
 import com.project.chat.util.MessageType;
 
+import static com.project.chat.gameroom.Gameroom.MAX_ROOM_SIZE;
+
 @Component
 public class GameroomRepository {
 	//Thread-Safe
 	private ConcurrentHashMap<Integer, Gameroom> gamerooms = new ConcurrentHashMap<>();
 	private final AtomicInteger seq = new AtomicInteger(0);
 	
-	final static Integer MAX_ROOM_SIZE = 4;
-	
-	private Random random = new Random();
-	
-	// key : user name, value : word
-	private ConcurrentHashMap<String, String> words = new ConcurrentHashMap<>();
-	
-	public String getWord(String userName) {
-		String word = words.get(userName);
-		words.remove(userName);
-		return word;
+	public String getWord(Integer gameroomId, String userName) {
+		return gamerooms.get(gameroomId).getWord(userName);
 	}
 	
 	public Integer createGameroom() {
@@ -58,51 +49,81 @@ public class GameroomRepository {
 	}
 	
 	public void gameProcess(Integer gameroomId, ChatMessage message) {
+		Gameroom gameroom = gamerooms.get(gameroomId);
 		switch(message.getMessageType()) {
 		case GAME_REQUEST:
 			//인원이 4명 모였으면 단어 분배 및 시작
 			//
 			//단어 생성 및 분배
 			//
-			startGame(gameroomId);
+			boolean result = startGame(gameroomId);
+			if(result == false) {
+				message.setMessage("게임 인원이 부족하여 시작할 수 없습니다.");
+				message.setMessageType(MessageType.ALERT);
+				break;
+			}
+			
 			//GAME_START
 			message.setMessageType(MessageType.GAME_START);
 			break;
 		case WORD_OK:
-			
-			//send DESCRIPTION_START
-			Gameroom gameroom = gamerooms.get(gameroomId);
-			message.setMessage(gameroom.getCurrentUser());
-			message.setMessageType(MessageType.DESCRIPTION_START);
+			gameroom.addSequence();
+			if(gameroom.checkAllPlayerFinish()) {
+				System.out.println("word_ok is true");
+				System.out.println("gameroom : " + gameroom);
+				
+				message.setMessage(
+						gameroom
+						.getCurrentUser()
+						.getUserName());
+				//send DESCRIPTION_START
+				message.setMessageType(MessageType.DESCRIPTION_START);
+			}
 			break;
 		case DESCRIPTION:
-			if(gamerooms.get(gameroomId).getCurrentUser()) {
-				
+			//do nothing
+			break;
+		case DESCRIPTION_FINISH:
+			if(gameroom.checkAllPlayerFinish()) {	//모두 설명을 완료했으면 범인 지목 시작
+				message.setMessageType(MessageType.SELECT_START);
+			}
+			else {
+				//다음 사람 설명 시작
+				message.setMessage(gameroom
+									.getCurrentUser()
+									.getUserName());
+				message.setMessageType(MessageType.DESCRIPTION_START);
 			}
 			
 			break;
 		case SELECT_OK:
 			//4명 모두 선택 완료?
 			//결과 전송
-			
 			//send RESULT
+			if(gameroom.checkAllPlayerFinish()) {
+			
+				message.setMessageType(MessageType.RESULT);
+			}
+			else {
+				gameroom.votePlayer(message.getMessage());
+			}
 			break;
 		default:
 			//error
-			System.out.println("NOT DEFINED MESSAGE TYPE");
+			System.out.println("== NOT DEFINED MESSAGE TYPE ==");
 			break;
 		}
 		
 	}
 	
-	private void startGame(Integer gameroomId) {
+	private boolean startGame(Integer gameroomId) {
 		if(gamerooms.get(gameroomId).getPlayers().size() < MAX_ROOM_SIZE) { 
 			//can't start message
+			return false;
 		}
 		
 		setWordList(gameroomId);
-		//send WORD_OK message
-		
+		return true;
 	}
 	
 	private void setWordList(Integer gameroomId) {
@@ -114,27 +135,7 @@ public class GameroomRepository {
 		String a = "라이터";
 		String b = "부싯돌";
 		
-		List<String> l = gamerooms
-			.get(gameroomId)
-			.getPlayers();
-		System.out.println("2=============word : " + l);
-		for(String e : l) {
-			words.put(e, a);
-		}
-		
-		System.out.println("3=============word");
-		/*
-		String key = gamerooms
-				.get(gameroomId)
-				.getPlayers().get(random.nextInt(4));
-		*/
-		//int i = random.nextInt(0);
-		int i = 0;
-		System.out.println("4=============word");
-		System.out.println("i : " + i);
-		String key = l.get(i);
-		
-		words.put(key, b);
+		gamerooms.get(gameroomId).setWord(a, b);
 	}
 	
 	

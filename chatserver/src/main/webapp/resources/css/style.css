@@ -42,6 +42,11 @@ body {
     display: none;
 }
 
+.decription_style {
+    background-color: var(--blue-color-800);
+    color: white;
+}
+
 
 /*
 * 모바일

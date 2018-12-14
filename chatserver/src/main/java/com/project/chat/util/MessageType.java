@@ -2,10 +2,13 @@ package com.project.chat.util;
 
 public enum MessageType {
 	MESSAGE,			//chat message
+	JOIN,
+	QUIT,
 	//Client -> Server
 	GAME_REQUEST,		//game start request
 	WORD_OK,			//user get word and response
 	SELECT_OK,			//user select response 
+	DESCRIPTION_FINISH,	//user's description finish message
 	DESCRIPTION,		// description message : it is also sent by server 
 	//Server -> Client message
 	ALERT,				//server's anouncement

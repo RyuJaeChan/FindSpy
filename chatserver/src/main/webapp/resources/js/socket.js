@@ -22,7 +22,7 @@ let socketClient = {
 
         this.stompClient.connect({},
             function (frame) {
-                console.log("connected : " + frame);
+                console.log("connected : " + frame);                
 
                 console.log("join message : " + JSON.stringify({message:paramObj.roomId}));
                 this.stompClient.send("/game/join", {}, JSON.stringify({message:paramObj.roomId}));
@@ -36,7 +36,7 @@ let socketClient = {
                     console.log("message.messageType : " + messageObj.messageType);
 
                     paramObj.callBack(messageObj);
-                });
+                }.bind(this));
             }.bind(this),
             function(message) {
                 console.log("====connect fail : " + message);

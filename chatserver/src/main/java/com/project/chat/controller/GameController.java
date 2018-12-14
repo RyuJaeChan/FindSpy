@@ -34,18 +34,7 @@ import com.project.chat.util.MessageType;
 //https://supawer0728.github.io/2018/03/30/spring-websocket/
 
 @Controller
-public class GameController {
-	/*
-	@MessageMapping("/add")
-	@SendTo("/topic/messages")
-	public String send(String message, SimpMessageHeaderAccessor headerAccessor) throws Exception {
-		System.out.println("message : " + message);
-		System.out.println("headerAccessor : " + headerAccessor);
-		
-	    return message;
-	}
-	*/
-	
+public class GameController {	
 	@Autowired
 	private GameroomRepository gameroomRepository;
 	
@@ -102,10 +91,10 @@ public class GameController {
 	@ResponseBody
 	public Map<String, String> keyWord(@AuthenticationPrincipal AuthUser user) {
 		System.out.println("/words user : " + user);
+		String word = gameroomRepository.getWord(user.getGameroomId(), user.getUsername());
+		System.out.println("user's : " + user.getUsername() + " 's word : "+ word);
 		
-		//System.out.println(Collections.singletonMap("word", gameroomRepository.getWord(user.getUsername())));
-		
-		return Collections.singletonMap("word", gameroomRepository.getWord(user.getUsername()));
+		return Collections.singletonMap("word", word);
 	}
 	
 	//client에서 보낸 메시지를 처리한다.
@@ -119,18 +108,6 @@ public class GameController {
 		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
 	}
 	
-	/*
-	 * @Secured(User.ROLE_USER)
-@MessageMapping("/watch/{liveid}")
-@SendTo("/topic/watchinfo-{liveid}")
-@JsonView(View.Live.class)
-public LiveWatchInfoMessage liveinfo(@DestinationVariable("liveid") String liveid,
-                                         @AuthenticationPrincipal UserDetails activeUser) {
-        ...
-        return LiveWatchInfoMessage.builder().build();
-    }
-    */
-	
 	@MessageMapping("/join")
 	public void joinMessage(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
 		System.out.println("join recv message : " + message);
@@ -143,7 +120,7 @@ public LiveWatchInfoMessage liveinfo(@DestinationVariable("liveid") String livei
 		
 		user.setGameroomId(roomId);
 		
-		message.setMessageType(MessageType.ALERT);
+		message.setMessageType(MessageType.JOIN);
 		message.setMessage(user.getUsername() + "님이 참가하였습니다.");
 		
 		System.out.println("join message : " + message);
@@ -153,18 +130,12 @@ public LiveWatchInfoMessage liveinfo(@DestinationVariable("liveid") String livei
 	@MessageMapping("/quit")
 	public void quitMessage(@AuthenticationPrincipal AuthUser user) {
 		gameroomRepository.quitGameroom(user.getGameroomId(), user.getUsername());
-		
-		/*
-		message.setType(MessageType.ALERT);
-		message.setMessage(message.getWriter() + "님이 퇴장하였습니다.");
-		System.out.println("qmessage : " + message);
-		
-		smt.convertAndSend("/sub/gameroom/" + message.getGameroomId(), message);
-		*/
+
 		ChatMessage message = ChatMessage
 									.builder()
-									.setType(MessageType.ALERT)
+									.setType(MessageType.QUIT)
 									.setWriter(user.getUsername())
+									.setMessage(user.getUsername() + "님이 퇴장하였습니다.")
 									.build();
 		
 		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
@@ -179,7 +150,7 @@ public LiveWatchInfoMessage liveinfo(@DestinationVariable("liveid") String livei
 		
 		gameroomRepository.gameProcess(user.getGameroomId(), message);
 		
-		
+		System.out.println("play send message : " + message);
 		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
 	}
 

@@ -20,6 +20,9 @@
 			<button class="start_button">게임 시작</button>
 		</div>
 		<div>
+			<button class="discription_finish">턴종료</button>
+		</div>
+		<div>
 			<ul class="user_list">
 				<li>a</li>
 				<li>b</li>

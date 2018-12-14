@@ -5,6 +5,7 @@ let chatManager = {
 
     sendButton: document.querySelector(".input_area .send_button"),
     inputText: document.querySelector(".input_area .chat_input"),
+    userId: document.querySelector(".user_id").dataset.user_id,
     
     recvTemplate: document.querySelector("#chat_template").innerText,
     myMessageTemplate: document.querySelector("#mymessage").innerText,
@@ -12,6 +13,8 @@ let chatManager = {
     lastUser: "",
 
     appendMessage: function(messageObj) {
+        console.log("this.userId : " + this.userId);
+        console.log("messageObj.writer : " + messageObj.writer);
         if (this.userId == messageObj.writer) {
             this._appendMyMessage(messageObj);
         }
@@ -47,17 +50,23 @@ let chatManager = {
             }
         }
 
-        return div.firstElementChild;
+        let ret = div.firstElementChild;
+        if(messageObj.messageType == "DESCRIPTION") {
+            ret.classList.add("decription_style");
+        }
+
+        return ret;
     },
     _scrollDown: function() {
         this.chatArea.scrollTop = this.chatArea.scrollHeight;
     },
-    appendAlertMessage: function (messageObj) {
+    appendAlertMessage: function (messageStr) {
         let element = document.createElement("div");
         element.className = "alert_message";
-        element.innerText = messageObj.message;
+        element.innerText = messageStr;
         this.chatArea.appendChild(element);
 
+        this.lastUser = "";
         this._scrollDown();
     },
     showDisconnectMessage: function() {
@@ -84,11 +93,26 @@ let GameManager = {
                 printObject(resultJson);
                 console.log("response : " + resultJson.word);
 
-                chatManager.appendAlertMessage({message : "당신의 단어 : " + resultJson.word});
+                chatManager.appendAlertMessage("당신의 단어 : " + resultJson.word);
 
                 socketClient.sendGameMessage({messageType : "WORD_OK"});
             }
         });
+    },
+    startDescription: function(messageObj) {
+        let user = messageObj.message;
+        if(user == this.userId) {
+            console.log("user == this.userId is true");
+            this.isMyTurn = true;
+            chatManager.appendAlertMessage("당신의 차례입니다.");
+        }
+        else {
+            chatManager.appendAlertMessage(user + "님의 차례입니다.");
+        }
+    },
+    finishDescription: function() {
+        this.isMyTurn = false;
+        socketClient.sendGameMessage({messageType : "DESCRIPTION_FINISH"});
     },
     /*
     sendMessage: function(inputValue) {
@@ -110,13 +134,21 @@ let GameManager = {
         let msg = {};
         msg.writer = this.userId;
         msg.message = inputValue;
-        msg.messageType = "MESSAGE";
+        msg.messageType = this.isMyTurn == true ? "DESCRIPTION" : "MESSAGE";
 
         socketClient.sendChatMessage(msg);
     },
     setMode: function(mode) {
         this.mode = mode;
+    },
+    votePlayer: function(playerName) {
+        let msg = {};
+        msg.messageType = "SELECT_OK";
+        msg.message = playerName;
+
+        socketClient.sendGameMessage(msg);
     }
+
 };
 
 
@@ -124,7 +156,6 @@ let GameManager = {
 
 function initialize() {
     let roomid =  document.querySelector(".roomid").dataset.roomid;
-    let userId = document.querySelector(".user_id").dataset.user_id;
     let path = document.querySelector(".path").dataset.path;
 
     /*
@@ -140,31 +171,45 @@ function initialize() {
         callBack: function(messageObj) {
             console.log("callBack func called!");
             switch(messageObj.messageType) {
+                case "JOIN":
+                    chatManager.appendAlertMessage(messageObj.message);
+                    break;
+                case "QUIT":
+                    chatManager.appendAlertMessage(messageObj.message);
+                    break;
                 case "MESSAGE":
                     console.log("MESSAGE");
                     chatManager.appendMessage(messageObj);
                     break;
                 case "ALERT":
                     console.log("ALERT");
-                    chatManager.appendAlertMessage(messageObj);
+                    chatManager.appendAlertMessage(messageObj.message);
                     break;
                 case "GAME_START":
                     console.log("GAME_START");
-                    chatManager.appendAlertMessage({message:"게임이 시작됩니다."});
+                    chatManager.appendAlertMessage("게임이 시작됩니다.");
                     //request ajax
                     GameManager.getWord();
                     break;
                 case "DESCRIPTION_START":
-
+                    GameManager.startDescription(messageObj);
+                    break;
+                case "DESCRIPTION":
+                    chatManager.appendMessage(messageObj);
                     break;
                 case "TIME_OUT":
 
                     break;
                 case "SELECT_START":
-                
+                    chatManager.appendAlertMessage("구라쟁이를 지목해주세요.");
+
                     break;
                 case "RESULT":
-
+                    console.log("GAME_START");
+                    chatManager.appendAlertMessage(messageObj.message);
+                    break;
+                default:
+                    console.log("== WRONG MESSAGE TYPE ==");
                     break;
             }
         },
@@ -200,11 +245,16 @@ function initialize() {
     });
 
     let playButton = document.querySelector(".wrap .header_area .r_area .play_button")
-    playButton.addEventListener("click", function(){
+    playButton.addEventListener("click", function() {
         GameManager.startGame();
     });
 
-    window.addEventListener("beforeunload", function (evt) {
+    let finishTurnButton = document.querySelector(".menu .discription_finish");
+    finishTurnButton.addEventListener("click", function() {
+        GameManager.finishDescription();
+    })
+
+    window.addEventListener("beforeunload", function(evt) {
         console.log("beforeunload evt!");
         socketClient.disconnect();
         return "byby";

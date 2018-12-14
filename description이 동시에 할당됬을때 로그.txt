@@ -1,0 +1,34 @@
+gameroom : Gameroom(id=1, players=[Player(userName=user1_name, word=null)], sequence=0, timer=java.util.Timer@11641b29)
+join recv message : ChatMessage(writer=null, message=1, messageType=null)
+join user : AuthUser(userId=user2, gameroomId=1, userName=user2_name, password=123, authorities=[ROLE_USER])
+join message : ChatMessage(writer=null, message=user2_name님이 참가하였습니다., messageType=ALERT)
+play message : ChatMessage(writer=null, message=null, messageType=GAME_REQUEST)
+play user : AuthUser(userId=user1, gameroomId=1, userName=user1_name, password=123, authorities=[ROLE_USER])
+단어를 받은 [Player(userName=user1_name, word=부싯돌), Player(userName=user2_name, word=라이터)]
+play send message : ChatMessage(writer=null, message=null, messageType=GAME_START)
+/words user : AuthUser(userId=user2, gameroomId=1, userName=user2_name, password=123, authorities=[ROLE_USER])
+/words user : AuthUser(userId=user1, gameroomId=1, userName=user1_name, password=123, authorities=[ROLE_USER])
+user's : user2_name 's word : 라이터
+user's : user1_name 's word : 부싯돌
+play message : ChatMessage(writer=null, message=null, messageType=WORD_OK)
+play user : AuthUser(userId=user2, gameroomId=1, userName=user2_name, password=123, authorities=[ROLE_USER])
+play message : ChatMessage(writer=null, message=null, messageType=WORD_OK)
+seq in add sequence : 1
+play user : AuthUser(userId=user1, gameroomId=1, userName=user1_name, password=123, authorities=[ROLE_USER])
+seq in check : 1
+seq in add sequence : 2
+seq in check : 2
+check return true
+check return true
+word_ok is true
+word_ok is true
+gameroom : Gameroom(id=1, players=[Player(userName=user1_name, word=부싯돌), Player(userName=user2_name, word=라이터)], sequence=0, timer=java.util.Timer@11641b29)
+gameroom : Gameroom(id=1, players=[Player(userName=user1_name, word=부싯돌), Player(userName=user2_name, word=라이터)], sequence=0, timer=java.util.Timer@11641b29)
+getCurrentUserCalled????
+getCurrentUserCalled????
+index : 1
+index : 0
+getCurrentUserCalled : ret val : Player(userName=user2_name, word=라이터)
+getCurrentUserCalled : ret val : Player(userName=user1_name, word=부싯돌)
+play send message : ChatMessage(writer=null, message=user2_name, messageType=DESCRIPTION_START)
+play send message : ChatMessage(writer=null, message=user1_name, messageType=DESCRIPTION_START)
