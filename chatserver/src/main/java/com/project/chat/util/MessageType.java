@@ -16,5 +16,6 @@ public enum MessageType {
 	DESCRIPTION_START,	//description start message
 	TIME_OUT,			//action time limit alert
 	SELECT_START,		//suspect time start
-	RESULT				//game result
+	DESCRIPTION_RESTART,//the most voted player is not only one
+	GAME_END			//game end ans send result
 }

@@ -3,6 +3,7 @@ package com.project.chat.gameroom;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -34,18 +35,40 @@ public class GameroomRepository {
 		return gamerooms.get(id);
 	}
 	
-	public boolean joinGameroom(Integer id, String userId) {
+	
+	/*
+	 * 해당 방에 참가 후 참가한 플레이어 목록을 리턴
+	 */
+	public String joinGameroom(Integer id, String userId) {
 		Gameroom gameroom = gamerooms.get(id);
-		return gameroom.addUser(userId);
+		
+		gameroom.addUser(userId);
+		
+		String msg = gameroom.getPlayers()
+				.stream()
+				.map(e -> e.getUserName())
+				.collect(Collectors.toList())
+				.toString();
+		
+		return msg;
 	}
 	
-	public boolean quitGameroom(Integer id, String userId) {
+	public String quitGameroom(Integer id, String userId) {
 		Gameroom gameroom = gamerooms.get(id);
 		gameroom.delUser(userId);
+
 		if(gameroom.getPlayers().size() == 0) {
 			gamerooms.remove(id);
+			return "quit";
 		}
-		return true;
+		
+		String msg = gameroom.getPlayers()
+				.stream()
+				.map(e -> e.getUserName())
+				.collect(Collectors.toList())
+				.toString();
+		
+		return msg;
 	}
 	
 	public void gameProcess(Integer gameroomId, ChatMessage message) {
@@ -58,12 +81,19 @@ public class GameroomRepository {
 			//
 			boolean result = startGame(gameroomId);
 			if(result == false) {
-				message.setMessage("게임 인원이 부족하여 시작할 수 없습니다.");
+				message.setMessage("인원이 부족하여 게임을 시작할 수 없습니다.");
 				message.setMessageType(MessageType.ALERT);
 				break;
 			}
 			
+			String msg = gameroom.getPlayers()
+					.stream()
+					.map(e -> e.getUserName())
+					.collect(Collectors.toList())
+					.toString();
+			
 			//GAME_START
+			message.setMessage(msg);
 			message.setMessageType(MessageType.GAME_START);
 			break;
 		case WORD_OK:
@@ -100,9 +130,12 @@ public class GameroomRepository {
 			//4명 모두 선택 완료?
 			//결과 전송
 			//send RESULT
+			gameroom.addSequence();
 			if(gameroom.checkAllPlayerFinish()) {
-			
-				message.setMessageType(MessageType.RESULT);
+				gameroom.getSelectedPlayer().ifPresent();
+				message.setWriter();
+				message.setMessage("범인은 바로 당신이야!");
+				message.setMessageType(MessageType.GAME_END);
 			}
 			else {
 				gameroom.votePlayer(message.getMessage());

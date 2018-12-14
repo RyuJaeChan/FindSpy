@@ -53,8 +53,14 @@
 		</div>
 
 		<div class="input_area">
-			<input class="chat_input" type="text" name="값의 이름" placeholder="메시지를 입력해주세요." />
-			<button class="send_button">SEND</button>
+			<div class="text_area">
+				<input class="chat_input" type="text" value="" />
+			</div>
+			<div class="button_area">
+				<div class="send_button">
+					보내기
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -70,23 +76,29 @@
 					<div class="margin">
 						<img class="arrow" src="${pageContext.request.contextPath}/img/left.png">
 						</div>
-						<div class="message">
-							{message}
-						</div>
+						<div class="message">{message}</div>
 					</div>
 				</div>
 	</script>
 	<script type="template" id="mymessage">
 			<div class="mymessage">
                     <div class="text_area">
-                        <div class="message">
-                           {message}
-                        </div>
+                        <div class="message">{message}</div>
                         <div class="margin">
                             <img class="arrow" src="${pageContext.request.contextPath}/img/right.png">
                         </div>
                     </div>
                 </div>
+	</script>
+	<script type="template" id="select_message">
+			<div class="player" data-user_id="{userName}">
+				<div class="user_img">
+					<img class="thumbnail_img" src="${pageContext.request.contextPath}/img/user.png">
+				</div>
+				<div class="user_name">
+					{userName}
+				</div>
+			</div>
 	</script>
 	<script src="${pageContext.request.contextPath}/js/common/utils.js"></script>
 	<script src="${pageContext.request.contextPath}/js/common/ajax.js"></script>

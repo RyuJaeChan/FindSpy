@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import com.project.chat.user.Player;
 
@@ -111,6 +112,14 @@ public class Gameroom {
 	
 	public void votePlayer(String userName) {
 		players.stream().filter(element -> userName.equals(element.getUserName())).findFirst().get().addVote();
+	}
+	
+	public Optional<Player> getSelectedPlayer() {
+		List<Player> s = players.stream().sorted((a, b)->b.compareTo(a)).collect(Collectors.toList());
+		if(s.get(0).getVote() == s.get(1).getVote()) {
+			return null;
+		}
+		return players.stream().sorted((a, b)->b.compareTo(a)).findFirst();
 	}
 
 	

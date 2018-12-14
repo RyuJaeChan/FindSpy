@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Data;
 
 @Data
-public class Player {
+public class Player implements Comparable<Player> {
 	private String userName;
 	private String word;
 	private AtomicInteger vote = new AtomicInteger(0);
@@ -20,4 +20,13 @@ public class Player {
 		vote.incrementAndGet();
 	}
 	
+	public Integer getVote() {
+		return vote.intValue();
+	}
+	
+    @Override
+    public int compareTo(Player o) {
+        return Integer.compare(vote.intValue(), o.getVote());
+    }
+
 }

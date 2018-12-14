@@ -9,6 +9,7 @@ let chatManager = {
     
     recvTemplate: document.querySelector("#chat_template").innerText,
     myMessageTemplate: document.querySelector("#mymessage").innerText,
+    playerTemplate: document.querySelector("#select_message").innerText,
 
     lastUser: "",
 
@@ -72,6 +73,32 @@ let chatManager = {
     showDisconnectMessage: function() {
         //alert("서버와 연결이 끊어졌습니다.");
     },
+    showUserList: function(players) {
+        let div = document.createElement("div");
+
+        console.log("players : " + players);
+        
+        div.classList.add("player_list");
+        players.forEach(element => {
+            if(this.userId != element) {//자기는 제외한 플레이어 목록 표시
+                div.innerHTML += formatTemplate(this.playerTemplate, {userName:element});
+            }
+        });
+
+        div.addEventListener("click", function(evt) {
+            console.log("evt.target.className : " + evt.target.className);
+            if(evt.target.className != "player" ||
+            evt.target.className != "user_name" ||
+            evt.target.className != "thumbnail_img") {
+                let userName = evt.target.closest(".player").dataset.user_id;
+                GameManager.votePlayer(userName);
+                return;
+            }
+            
+        });
+
+        this.chatArea.appendChild(div);
+    }
 };
 
 let GameManager = {
@@ -79,8 +106,21 @@ let GameManager = {
     userId: document.querySelector(".user_id").dataset.user_id,
     path: document.querySelector(".path").dataset.path,
 
+    players: [],    //username string
+
     isMyTurn: false,
-    
+
+    addPlayer: function(userName) {
+        this.players.push(userName);
+    },
+    delPlayer: function(userName) {
+        this.players = this.players.filter(item => item !== userName);
+    },
+    setPlayers: function(messagePlayers) {
+        console.log("set messagePlayers : " + messagePlayers);
+        this.players = messagePlayers.slice( 1, -1).split(",");;
+        console.log("set player : " + this.players);
+    },
     startGame: function() {
         socketClient.sendGameMessage({messageType : "GAME_REQUEST"});
     },
@@ -114,22 +154,6 @@ let GameManager = {
         this.isMyTurn = false;
         socketClient.sendGameMessage({messageType : "DESCRIPTION_FINISH"});
     },
-    /*
-    sendMessage: function(inputValue) {
-        if(this.mode == "GAME" && this.isMyTurn == false) {
-            console.log("it is not my turn");
-            return;
-        }
-
-
-        let msg = {};
-        //msg.gameroomId = this.roomid;
-        msg.writer = this.userId;
-        msg.message = inputValue;
-        msg.messageType = this.mode == "CHAT" ? "MESSAGE" : "CLUE";
-
-        socketClient.send(msg);
-    }, */
     sendChatMessage: function(inputValue) {
         let msg = {};
         msg.writer = this.userId;
@@ -138,11 +162,9 @@ let GameManager = {
 
         socketClient.sendChatMessage(msg);
     },
-    setMode: function(mode) {
-        this.mode = mode;
-    },
     votePlayer: function(playerName) {
         let msg = {};
+        msg.writer = this.userId;
         msg.messageType = "SELECT_OK";
         msg.message = playerName;
 
@@ -169,13 +191,15 @@ function initialize() {
         pathUrl: path,
         roomId : roomid,
         callBack: function(messageObj) {
-            console.log("callBack func called!");
+            console.log("callBack func called! : messagetype : " + messageObj.messageType);
             switch(messageObj.messageType) {
                 case "JOIN":
-                    chatManager.appendAlertMessage(messageObj.message);
+                    GameManager.setPlayers(messageObj.message);
+                    chatManager.appendAlertMessage(messageObj.writer + "님이 참가하였습니다.");
                     break;
                 case "QUIT":
-                    chatManager.appendAlertMessage(messageObj.message);
+                    GameManager.setPlayers(messageObj.message);
+                    chatManager.appendAlertMessage(messageObj.writer + "님이 퇴장하였습니다.");
                     break;
                 case "MESSAGE":
                     console.log("MESSAGE");
@@ -201,12 +225,20 @@ function initialize() {
 
                     break;
                 case "SELECT_START":
+                    console.log("GameManager.players : " + GameManager.players);
                     chatManager.appendAlertMessage("구라쟁이를 지목해주세요.");
-
+                    chatManager.showUserList(GameManager.players);
                     break;
-                case "RESULT":
-                    console.log("GAME_START");
+                case "SELECT_OK":
+                    chatManager.appendAlertMessage(messageObj.writer + "님이 지목을 완료했습니다.");
+                    break;
+                case "DESCRIPTION_RESTART":
+                    socketClient.sendGameMessage({messageType : "WORD_OK"});
+                    break;
+                case "GAME_END":
                     chatManager.appendAlertMessage(messageObj.message);
+                    chatManager.appendAlertMessage("지목된 대상은 " + messageObj.writer + "입니다.");
+                    chatManager.appendAlertMessage("==== 게임 종료이빈다 ====");
                     break;
                 default:
                     console.log("== WRONG MESSAGE TYPE ==");
@@ -259,7 +291,6 @@ function initialize() {
         socketClient.disconnect();
         return "byby";
     });
-      
 
 };
 

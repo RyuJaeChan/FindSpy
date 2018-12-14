@@ -116,12 +116,13 @@ public class GameController {
 		
 		Integer roomId = Integer.parseInt(message.getMessage());
 		
-		boolean result = gameroomRepository.joinGameroom(roomId, user.getUsername());
+		String msg = gameroomRepository.joinGameroom(roomId, user.getUsername());
 		
 		user.setGameroomId(roomId);
 		
 		message.setMessageType(MessageType.JOIN);
-		message.setMessage(user.getUsername() + "님이 참가하였습니다.");
+		message.setWriter(user.getUsername());
+		message.setMessage(msg);
 		
 		System.out.println("join message : " + message);
 		smt.convertAndSend("/sub/gameroom/" + roomId, message);
@@ -129,13 +130,13 @@ public class GameController {
 	
 	@MessageMapping("/quit")
 	public void quitMessage(@AuthenticationPrincipal AuthUser user) {
-		gameroomRepository.quitGameroom(user.getGameroomId(), user.getUsername());
+		String msg = gameroomRepository.quitGameroom(user.getGameroomId(), user.getUsername());
 
 		ChatMessage message = ChatMessage
 									.builder()
 									.setType(MessageType.QUIT)
 									.setWriter(user.getUsername())
-									.setMessage(user.getUsername() + "님이 퇴장하였습니다.")
+									.setMessage(msg)
 									.build();
 		
 		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);

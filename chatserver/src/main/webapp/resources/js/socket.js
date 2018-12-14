@@ -23,10 +23,11 @@ let socketClient = {
         this.stompClient.connect({},
             function (frame) {
                 console.log("connected : " + frame);                
-
-                console.log("join message : " + JSON.stringify({message:paramObj.roomId}));
-                this.stompClient.send("/game/join", {}, JSON.stringify({message:paramObj.roomId}));
-
+                setTimeout(()=>{
+                    console.log("join message : " + JSON.stringify({message:paramObj.roomId}));
+                    this.stompClient.send("/game/join", {}, JSON.stringify({message:paramObj.roomId}));
+                }, 0);
+                
                 this.stompClient.subscribe("/sub/gameroom/" + paramObj.roomId, function (message) {
                     let messageObj = JSON.parse(message.body);
 
