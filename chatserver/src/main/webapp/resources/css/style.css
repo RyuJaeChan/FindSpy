@@ -35,6 +35,11 @@
     --send-button-color: var(--gray-color-500);
 }
 
+
+/*
+*   COLOR
+*/
+
 .wrap {
     background-color: var(--chat-area-color);
 }
@@ -48,12 +53,12 @@
     background-color: var(--input-area-color);
 }
 
-.chat_area .chat_block .text_area .message {
+.chat_area .chat_block .text_area .message_color {
     background-color: var(--message-color);
 }
 
 
-.chat_area .mymessage .text_area .message {
+.chat_area .mymessage .text_area .message_color {
     background-color: var(--mymessage-color);
 }
 
@@ -61,14 +66,15 @@
     background-color: var(--background-color);
 }
 
-.decription_style {
+.input_area .send_button {
+    background-color: var(--send-button-color);
+}
+
+.description_style {
     background-color: var(--decription-color);
     color: white;
 }
 
-.input_area .send_button {
-    background-color: var(--send-button-color);
-}
 
 
 
@@ -108,15 +114,6 @@ body {
     .menu {
         display: none;
     }
-/*
-    position: fixed;
-    top: 0px;
-    background-color: white;
-    width: 250px;
-    height: 100%;
-    display: block;
-}
-*/
 }
 
 
@@ -238,7 +235,8 @@ body {
     width: 100%;
     min-width: 300px;
     overflow-y: auto;
-    height: calc(100% - 85px);
+    height: calc(100% - 90px);
+    padding-bottom: 5px;
 }
 
 .chat_area .chat_block {
@@ -315,6 +313,23 @@ body {
 .input_area {
     height: 35px;
     line-height: 30px;
+    position: relative;
+}
+
+
+.input_area .desc_finish {
+    background-color: var(--gray-color-700);
+    position: absolute;
+    left: 0;
+    top:-65px;
+    width:60px;
+    height: 60px;
+    border-radius: 50px;
+    margin-left: 5px;
+    line-height: 60px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
 }
 
 .input_area .text_area{
@@ -378,7 +393,6 @@ body {
 .chat_area .player_list .player .user_name {
     color: white;
 }
-
 
 
 

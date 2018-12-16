@@ -9,24 +9,29 @@ public class Player implements Comparable<Player> {
 	private String userName;
 	private String word;
 	private AtomicInteger vote = new AtomicInteger(0);
-	
-	public Player() {}
-	
+
+	public Player() {
+	}
+
 	public Player(String userName) {
 		this.userName = userName;
 	}
-	
+
 	public void addVote() {
 		vote.incrementAndGet();
 	}
-	
+
 	public Integer getVote() {
 		return vote.intValue();
 	}
-	
-    @Override
-    public int compareTo(Player o) {
-        return Integer.compare(vote.intValue(), o.getVote());
-    }
+
+	public void setVote(int val) {
+		vote.set(val);
+	}
+
+	@Override
+	public int compareTo(Player o) {
+		return Integer.compare(vote.intValue(), o.getVote());
+	}
 
 }

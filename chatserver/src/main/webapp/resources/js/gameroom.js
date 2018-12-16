@@ -40,6 +40,7 @@ let chatManager = {
 
         if(this.lastUser == messageObj.writer) {
             div.querySelector(".arrow").hidden = true;
+
             let name = div.querySelector(".name");
             if(name) {
                 name.hidden = true;
@@ -53,7 +54,14 @@ let chatManager = {
 
         let ret = div.firstElementChild;
         if(messageObj.messageType == "DESCRIPTION") {
-            ret.classList.add("decription_style");
+            if(div.querySelector(".name")) {
+                ret.querySelector(".arrow").src = "/chatserver/img/left_gray_desc.png";
+            }
+            else {
+                ret.querySelector(".arrow").src = "/chatserver/img/right_gray_desc.png";
+            }
+            div.querySelector(".message").classList.remove("message_color");
+            div.querySelector(".message").classList.add("description_style");
         }
 
         return ret;
@@ -80,8 +88,11 @@ let chatManager = {
         
         div.classList.add("player_list");
         players.forEach(element => {
-            if(this.userId != element) {//자기는 제외한 플레이어 목록 표시
-                div.innerHTML += formatTemplate(this.playerTemplate, {userName:element});
+            console.log("=-====element : [" + element.trim()+"]");
+            console.log("=-====elementttue : " + typeof(element));
+
+            if(this.userId != element.trim()) {//자기는 제외한 플레이어 목록 표시
+                div.innerHTML += formatTemplate(this.playerTemplate, {userName:element.trim()});
             }
         });
 
@@ -106,10 +117,11 @@ let GameManager = {
     userId: document.querySelector(".user_id").dataset.user_id,
     path: document.querySelector(".path").dataset.path,
 
+    descFinishButton: document.querySelector(".input_area .desc_finish"),
+
     players: [],    //username string
 
     isMyTurn: false,
-
     addPlayer: function(userName) {
         this.players.push(userName);
     },
@@ -118,7 +130,7 @@ let GameManager = {
     },
     setPlayers: function(messagePlayers) {
         console.log("set messagePlayers : " + messagePlayers);
-        this.players = messagePlayers.slice( 1, -1).split(",");;
+        this.players = messagePlayers.trim().slice( 1, -1).split(",");;
         console.log("set player : " + this.players);
     },
     startGame: function() {
@@ -145,6 +157,7 @@ let GameManager = {
             console.log("user == this.userId is true");
             this.isMyTurn = true;
             chatManager.appendAlertMessage("당신의 차례입니다.");
+            this._showDescFinishButton();
         }
         else {
             chatManager.appendAlertMessage(user + "님의 차례입니다.");
@@ -153,6 +166,13 @@ let GameManager = {
     finishDescription: function() {
         this.isMyTurn = false;
         socketClient.sendGameMessage({messageType : "DESCRIPTION_FINISH"});
+        this._hideDescFinishButton();
+    },
+    _showDescFinishButton:function() {
+        this.descFinishButton.style.hidden = false;
+    },
+    _hideDescFinishButton:function() {
+        this.descFinishButton.style.hidden = true;
     },
     sendChatMessage: function(inputValue) {
         let msg = {};
@@ -234,6 +254,7 @@ function initialize() {
                     break;
                 case "DESCRIPTION_RESTART":
                     socketClient.sendGameMessage({messageType : "WORD_OK"});
+                    chatManager.appendAlertMessage("투표결과 동률이 나왔습니다.");
                     break;
                 case "GAME_END":
                     chatManager.appendAlertMessage(messageObj.message);
@@ -271,18 +292,14 @@ function initialize() {
         }
     });
 
-    let startButton = document.querySelector(".menu .start_button");
-    startButton.addEventListener("click", function() {
-        //GameManager.send
-    });
-
     let playButton = document.querySelector(".wrap .header_area .r_area .play_button")
     playButton.addEventListener("click", function() {
         GameManager.startGame();
     });
 
     let finishTurnButton = document.querySelector(".menu .discription_finish");
-    finishTurnButton.addEventListener("click", function() {
+
+    GameManager.descFinishButton.addEventListener("click", function() {
         GameManager.finishDescription();
     })
 

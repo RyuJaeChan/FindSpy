@@ -12,7 +12,7 @@
 </head>
 
 <body>
-	<div class="menu">
+	<!--div class="menu">
 		<div>
 			<button class="close_button">닫기</button>
 		</div>
@@ -29,7 +29,7 @@
 				<li>c</li>
 			</ul>
 		</div>
-	</div>
+	</div-->
 
 	<div class="wrap">
 		<input class="user_id" type="hidden" data-user_id="${userId}">
@@ -53,6 +53,9 @@
 		</div>
 
 		<div class="input_area">
+			<div class="desc_finish" hidden>
+                종료
+            </div>
 			<div class="text_area">
 				<input class="chat_input" type="text" value="" />
 			</div>
@@ -74,18 +77,18 @@
 						<span>{writer}</span>
 					</div>
 					<div class="margin">
-						<img class="arrow" src="${pageContext.request.contextPath}/img/left.png">
+						<img class="arrow" src="${pageContext.request.contextPath}/img/left_gray.png">
 						</div>
-						<div class="message">{message}</div>
+						<div class="message message_color">{message}</div>
 					</div>
 				</div>
 	</script>
 	<script type="template" id="mymessage">
 			<div class="mymessage">
                     <div class="text_area">
-                        <div class="message">{message}</div>
+						<div class="message message_color">{message}</div>
                         <div class="margin">
-                            <img class="arrow" src="${pageContext.request.contextPath}/img/right.png">
+                            <img class="arrow" src="${pageContext.request.contextPath}/img/right_gray.png">
                         </div>
                     </div>
                 </div>
@@ -105,7 +108,7 @@
 	<script src="${pageContext.request.contextPath}/js/lib/sockjs.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 	<script src="${pageContext.request.contextPath}/js/socket.js"></script>
-	<script src="${pageContext.request.contextPath}/js/menu.js"></script>
+	<!--script src="${pageContext.request.contextPath}/js/menu.js"></script-->
 	<script src="${pageContext.request.contextPath}/js/gameroom.js"></script>
 </body>
 
