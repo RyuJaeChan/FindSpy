@@ -169,10 +169,11 @@ let GameManager = {
         this._hideDescFinishButton();
     },
     _showDescFinishButton:function() {
-        this.descFinishButton.style.hidden = false;
+        console.log("flasle;!!");
+        this.descFinishButton.hidden = false;
     },
     _hideDescFinishButton:function() {
-        this.descFinishButton.style.hidden = true;
+        this.descFinishButton.hidden = true;
     },
     sendChatMessage: function(inputValue) {
         let msg = {};

@@ -33,6 +33,8 @@
     --mymessage-color: var(--gray-color-400);
     --decription-color: var(--gray-color-800);
     --send-button-color: var(--gray-color-500);
+
+    --shadow-color: var(--gray-color-900);
 }
 
 
@@ -47,6 +49,7 @@
 .header_area {
     background-color: var(--header-color);
     color: white;
+    box-shadow: 0px 2px 1px 1px var(--shadow-color);
 }
 
 .input_area {
@@ -68,6 +71,12 @@
 
 .input_area .send_button {
     background-color: var(--send-button-color);
+    box-shadow: 1px 1px 1px 1px var(--gray-color-900);
+}
+
+.input_area .send_button:hover {
+    background-color: var(--gray-color-900);
+    color: white;
 }
 
 .description_style {
@@ -276,6 +285,7 @@ body {
     padding: 6px;
     margin-left: 10px;
     max-width: 240px;
+    box-shadow: 1px 1px 1px 1px var(--gray-color-800);
 }
 
 .chat_area .mymessage {
@@ -294,6 +304,7 @@ body {
     padding: 6px;
     max-width: 240px;
     float: left;
+    box-shadow: 1px 1px 1px 1px var(--gray-color-800);
 }
 
 .chat_area .mymessage .text_area .margin {
@@ -330,7 +341,14 @@ body {
     text-align: center;
     color: white;
     cursor: pointer;
+    box-shadow: 0px 2px 1px 1px var(--shadow-color);
 }
+
+.input_area .desc_finish:hover{
+    background-color: var(--gray-color-800);
+}
+
+
 
 .input_area .text_area{
     height: 100%;
@@ -381,6 +399,11 @@ body {
     padding: 5px;
     margin: 5px;
     cursor: pointer;
+    box-shadow: 1px 1px 1px 1px var(--gray-color-900);
+}
+
+.chat_area .player_list .player:hover {
+    background-color: var(--gray-color-900);
 }
 
 .chat_area .player_list .player .user_img .thumbnail_img {
