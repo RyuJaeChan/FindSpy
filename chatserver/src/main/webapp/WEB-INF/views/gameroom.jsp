@@ -41,7 +41,7 @@
 				<img class="menu_button" src="${pageContext.request.contextPath}/img/menu_button.png">
 			</div>
 			<div class="r_area">
-				<img class="play_button" src="${pageContext.request.contextPath}/img/play.png">
+				<img class="play_button" src="${pageContext.request.contextPath}/img/play_.png">
 			</div>
 			<div>
 				Gameroom

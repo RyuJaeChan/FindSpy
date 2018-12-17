@@ -99,7 +99,7 @@
 
 html, body {
     height: 100%;
-    background-color: var(--gray-color-900);
+    background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url(../img/main1.jpg);
 }
 
 body {
@@ -242,7 +242,7 @@ body {
 /*
 * 태블릿
 */
-@media all and (min-width: 1024px) {
+@media all and (min-width: 500px) {
 
 .menu {
     display: block;
@@ -561,7 +561,7 @@ body {
     right: 0;
 }
 
-.conA .logout .button{
+.conA .logout .button {
     background-color: #000000;
     opacity: 0.5;
     border: 0;
@@ -571,4 +571,8 @@ body {
     border-radius: 5px;
     color: #ffffff;
     cursor: pointer;
+}
+
+.conA .logout .button:hover {
+    background-color: #e91e63;
 }

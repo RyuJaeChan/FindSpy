@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
     <link href="./css/style.css?ver=1" rel="stylesheet">
-    <title>추리추리마추리</title>
+    <title>추리추리 마추리</title>
 </head>
 
 <body>
