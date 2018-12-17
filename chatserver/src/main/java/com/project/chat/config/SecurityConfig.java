@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			//.antMatchers("/game").hasRole("USER")
 			//.antMatchers("/main").hasRole("USER")
 			//.anyRequest().authenticated()
-			.antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+			.antMatchers("/css/**", "/js/**", "/img/**").permitAll()
 			.antMatchers("/").permitAll()
 			.anyRequest().authenticated()
 		.and()

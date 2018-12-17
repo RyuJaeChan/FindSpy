@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class Gameroom {
 	private Integer id;
-	public final static Integer MAX_ROOM_SIZE = 3;
+	public final static Integer MAX_ROOM_SIZE = 2;
 	// thread safe
 	private List<Player> players = Collections.synchronizedList(new ArrayList<>());
 

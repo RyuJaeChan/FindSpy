@@ -109,6 +109,7 @@ let chatManager = {
         });
 
         this.chatArea.appendChild(div);
+        this._scrollDown();
     }
 };
 

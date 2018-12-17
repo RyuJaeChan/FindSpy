@@ -25,6 +25,9 @@
     --gray-color-800: #424242;
     --gray-color-900: #212121;
 
+    /*Orange*/
+    --orange-color-900: #e65100;
+
     --background-color: var(--blue-color-900);
     --header-color: var(--gray-color-700);
     --input-area-color: var(--gray-color-300);
@@ -33,6 +36,8 @@
     --mymessage-color: var(--gray-color-400);
     --decription-color: var(--gray-color-800);
     --send-button-color: var(--gray-color-500);
+
+    --selected-color: var(--orange-color-900);
 
     --shadow-color: var(--gray-color-900);
 }
@@ -49,6 +54,7 @@
 .header_area {
     background-color: var(--header-color);
     color: white;
+    font-size: 25px;
     box-shadow: 0px 2px 1px 1px var(--shadow-color);
 }
 
@@ -75,7 +81,7 @@
 }
 
 .input_area .send_button:hover {
-    background-color: var(--gray-color-900);
+    background-color: var(--selected-color);
     color: white;
 }
 
@@ -93,6 +99,7 @@
 
 html, body {
     height: 100%;
+    background-color: var(--gray-color-900);
 }
 
 body {
@@ -119,9 +126,34 @@ body {
 * 모바일
 */
 
+
+
+/*
+*   Login Form
+*/
+
+.login_form {
+    width: 100%;
+    background-color: #0d47a1;
+    margin: auto;
+}
+
+.login_form .form_group > label{
+    display: block;
+}
+
+.login_form .form_group > input{
+    width: 80%
+}
+
+
 @media all and (min-width: 768px) {
     .menu {
         display: none;
+    }
+    .login_form {
+        width: 500px;
+        background-color: red;
     }
 }
 
@@ -138,6 +170,7 @@ body {
     height: 50px;
     line-height: 50px;
     text-align: center;
+    position: relative;
 }
 
 .header_area .button_area {
@@ -177,6 +210,29 @@ body {
     margin-right: 5px;
 }
 
+.header_area .button_form {
+    position: absolute;
+    display: inline-block;
+    top:0;
+    right: 0;
+    margin-right: 5px;
+    1float: right;
+}
+
+.header_area .button_form > input {
+    background-color: var(--gray-color-800);
+    height: 30px;
+    border: 0;
+    border-radius: 10px;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0px 2px 1px 1px var(--shadow-color);
+}
+
+.header_area .button_form > input:hover {
+    background-color: var(--selected-color);
+}
+
 
 .input_area {
     width: 100%;
@@ -191,7 +247,6 @@ body {
 .menu {
     display: block;
 }
-
     
 .header_area .button_area .menu_button {
     display: none;
@@ -345,7 +400,7 @@ body {
 }
 
 .input_area .desc_finish:hover{
-    background-color: var(--gray-color-800);
+    background-color: var(--selected-color);
 }
 
 
@@ -403,7 +458,7 @@ body {
 }
 
 .chat_area .player_list .player:hover {
-    background-color: var(--gray-color-900);
+    background-color: var(--selected-color);
 }
 
 .chat_area .player_list .player .user_img .thumbnail_img {
@@ -445,14 +500,75 @@ body {
 
 .wrap .gamelist_area ul li{
     list-style: none;
-    background-color: var(--blue-color-400);
+    background-color: var(--gray-color-700);
     margin: 5px;
     border-radius: 5px;
     padding-left: 5px;
     height: 40px;
     line-height: 40px;
+    box-shadow: 0px 2px 1px 1px var(--shadow-color);
 }
 
 .wrap .gamelist_area ul li:hover{
-    background-color: var(--blue-color-700);
+    background-color: var(--selected-color);
+}
+
+.conA {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	min-height: 450px;
+	background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url(../img/main1.jpg);
+	background-position: center;
+	background-size: cover;
+	color: #fff;
+	color: #fff;
+	text-align: center;
+}
+
+.conA p {
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 18px;
+}
+
+.conA img {
+	width: 20%;
+}
+
+.conA a {
+	display: inline-block;
+	margin-top: 20px;
+	padding: 10px 30px;
+	border: solid 3px currentColor;
+	border-radius: 6px;
+	background-color: #BF6A7A;
+	background-color: var(--accent-color);
+	color: #fff;
+	color: var(--text-bright-color);
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.conA a:hover	{
+	background-color: #e91e63;
+}
+
+.conA .logout {
+    position: absolute;
+    top:0;
+    right: 0;
+}
+
+.conA .logout .button{
+    background-color: #000000;
+    opacity: 0.5;
+    border: 0;
+    margin-right: 5px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 5px;
+    color: #ffffff;
+    cursor: pointer;
 }

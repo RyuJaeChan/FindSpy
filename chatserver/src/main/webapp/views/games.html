@@ -1,13 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="./css/style.css?ver=1" rel="stylesheet">
+	<link href="../resources/css/style.css?ver=1" rel="stylesheet">
 	<title>Game Rooms</title>
 </head>
 
@@ -26,7 +23,7 @@
 			<ul>
 				<c:forEach items="${list}" var="item">
 					<a href="./gameroom/${item.getId()}">
-						<li>${item.getPlayers().getUserName()}님의 방</li>
+						<li>${item.getPlayers().get(0).getUserName()}님의 방</li>
 					</a>
 				</c:forEach>
 			</ul>
