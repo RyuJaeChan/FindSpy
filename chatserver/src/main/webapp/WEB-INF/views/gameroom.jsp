@@ -70,7 +70,7 @@
 	<script type="template" id="chat_template">
 			<div class="chat_block">
 				<div class="thumbnail_area">
-					<img class="thumbnail_img" src="${pageContext.request.contextPath}/img/user.png">
+					<img class="thumbnail_img" src="${pageContext.request.contextPath}/img/suspect.png">
 				</div>
 				<div class="text_area">
 					<div class="name">
@@ -96,7 +96,7 @@
 	<script type="template" id="select_message">
 			<div class="player" data-user_id="{userName}">
 				<div class="user_img">
-					<img class="thumbnail_img" src="${pageContext.request.contextPath}/img/user.png">
+					<img class="thumbnail_img" src="${pageContext.request.contextPath}/img/suspect.png">
 				</div>
 				<div class="user_name">
 					{userName}

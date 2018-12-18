@@ -166,7 +166,12 @@ let GameManager = {
     },
     finishDescription: function() {
         this.isMyTurn = false;
-        socketClient.sendGameMessage({messageType : "DESCRIPTION_FINISH"});
+
+        let msg = {};
+        msg.messageType = "DESCRIPTION_FINISH";
+        msg.writer = this.userId;
+        socketClient.sendGameMessage(msg);
+
         this._hideDescFinishButton();
     },
     _showDescFinishButton:function() {
@@ -244,7 +249,7 @@ function initialize() {
                     chatManager.appendMessage(messageObj);
                     break;
                 case "TIME_OUT":
-
+                    //todo
                     break;
                 case "SELECT_START":
                     console.log("GameManager.players : " + GameManager.players);
@@ -257,11 +262,18 @@ function initialize() {
                 case "DESCRIPTION_RESTART":
                     socketClient.sendGameMessage({messageType : "WORD_OK"});
                     chatManager.appendAlertMessage("투표결과 동률이 나왔습니다.");
+                    chatManager.appendAlertMessage("다시 설명을 해주세요.");
                     break;
                 case "GAME_END":
-                    chatManager.appendAlertMessage(messageObj.message);
                     chatManager.appendAlertMessage("지목된 대상은 " + messageObj.writer + "입니다.");
-                    chatManager.appendAlertMessage("==== 게임 종료이빈다 ====");
+                    if(messageObj.message == "SUCCESS") {
+                        chatManager.appendAlertMessage("범인을 찾았습니다!!");    
+                    }
+                    else {
+                        chatManager.appendAlertMessage("선량한 시민을 지목했습니다...");
+                    }
+
+                    chatManager.appendAlertMessage("==== 게임 종료 ====");
                     break;
                 default:
                     console.log("== WRONG MESSAGE TYPE ==");

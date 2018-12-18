@@ -8,7 +8,8 @@ import lombok.Data;
 public class Player implements Comparable<Player> {
 	private String userName;
 	private String word;
-	private AtomicInteger vote = new AtomicInteger(0);
+	private AtomicInteger vote = new AtomicInteger(0);	//how many get voted
+	private boolean flag = false;	//check description finish or select finish 
 
 	public Player() {
 	}

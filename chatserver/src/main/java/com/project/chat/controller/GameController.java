@@ -136,10 +136,10 @@ public class GameController {
 	public void sendGameStep(ChatMessage message, @AuthenticationPrincipal AuthUser user) {
 		logger.info("[/play](SOCKET) AuthUser : {}, ChatMessage : {}", user, message);
 
-		gameroomRepository.gameProcess(user.getGameroomId(), message);
-
-		smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
-		logger.info("  send {}", message);
+		if(gameroomRepository.gameProcess(user.getGameroomId(), message)) {
+			smt.convertAndSend("/sub/gameroom/" + user.getGameroomId(), message);
+			logger.info("  send {}", message);
+		}
 	}
 
 }

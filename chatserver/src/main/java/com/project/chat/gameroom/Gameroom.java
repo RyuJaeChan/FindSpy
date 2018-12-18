@@ -4,28 +4,51 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.project.chat.user.Player;
+import com.project.chat.util.GameState;
 
 import lombok.Data;
 
 @Data
 public class Gameroom {
 	private Integer id;
-	public final static Integer MAX_ROOM_SIZE = 2;
+	public final static Integer MAX_ROOM_SIZE = 3;
 	// thread safe
 	private List<Player> players = Collections.synchronizedList(new ArrayList<>());
+	private List<String> check = Collections.synchronizedList(new ArrayList<>());
+	private Player currentPlayer;	//current player having description turn
+	private Player suspectedPlayer;	//player getting a different word
+	private GameState gameState = GameState.CHATTING;
 
 	private AtomicInteger sequence = new AtomicInteger(0);
-	// private Set<String> userSet = Collections.synchronizedSet(new HashSet<>());
 
 	private Timer timer = new Timer();
+	
+	Random random = new Random();
 
 	public Gameroom() {
 
+	}
+	
+	/*
+	 *	게임 시작할 떄 초기화
+	 */
+	public void init() {
+		initSequence();
+		
+		//set voted value 0
+		players.stream().forEach(element -> {
+			element.setVote(0);
+		});
+		
+		check.clear();
+		//shuffle Players List
+		Collections.shuffle(players);
 	}
 
 	public Gameroom(Integer id) {
@@ -48,20 +71,24 @@ public class Gameroom {
 		return players.removeIf(element -> userName.equals(element.getUserName()));
 	}
 
-	public void setWord(String word1, String word2) {
-		initSequence();
-		players.stream().forEach(element -> {
-			element.setVote(0);
-		});
-		// Random random = new Random();
+	
+	
+	//Return Player name getting a different word
+	public String setWord(String word1, String word2) {
+		gameState = GameState.WORD_WAITING;
+
+		int index = random.nextInt(MAX_ROOM_SIZE);
 
 		players.stream().forEach(element -> {
 			element.setWord(word1);
 		});
 
-		players.get(0).setWord(word2);
+		players.get(index).setWord(word2);
+		
+		suspectedPlayer = players.get(index); 
 
 		System.out.println("단어를 받은 " + players);
+		return suspectedPlayer.getUserName();
 	}
 
 	public String getWord(String userName) {
@@ -78,7 +105,6 @@ public class Gameroom {
 	 * 
 	 */
 	synchronized public boolean checkAllPlayerFinish() {
-		System.out.println("seq in check : " + sequence.intValue());
 		if (sequence.intValue() == players.size()) {
 			System.out.println("check return true");
 			initSequence();
@@ -94,24 +120,34 @@ public class Gameroom {
 		System.out.println("seq in add sequence : " + sequence.intValue());
 	}
 
-	// 순서 섞는거 추가해야함
+	// return player having description turn now
 	public Player getCurrentUser() {
 		System.out.println("getCurrentUserCalled????");
 		Integer i = sequence.getAndIncrement();
 		System.out.println("index : " + i);
-		Player ret = players.get(i);
-		System.out.println("getCurrentUserCalled : ret val : " + ret);
+		currentPlayer = players.get(i);
+		System.out.println("getCurrentUserCalled : ret val : " + currentPlayer);
 		/*
 		 * if(sequence.intValue() < 0 || sequence.intValue() >= players.size()) { return
 		 * null; }
 		 */
-		return ret;
+		return currentPlayer;
 	}
 
-	public void votePlayer(String userName) {
+	public boolean votePlayer(String fromUserName, String userName) {
+		boolean checkAlreadyVote = check.stream().anyMatch(element -> element.equals(fromUserName));
+		if(checkAlreadyVote) {
+			return false;
+		}
+		
+		addSequence();
 		players.stream().filter(element -> userName.equals(element.getUserName())).findFirst().get().addVote();
+		check.add(fromUserName);
+		
+		return true;
 	}
 
+	//if same voted player, return null;
 	public String getSelectedPlayer() {
 		List<Player> sortedList = players.stream().sorted((a, b) -> b.compareTo(a)).collect(Collectors.toList());
 		System.out.println("players in getselectedpalyer : " + sortedList);
